@@ -64,3 +64,13 @@ class MediaDevice(ABC):
             print("Состояние батареи среднее")
         else:
             print("Состояние батареи плохое. Поменяйте батарею")
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            brand=data["brand"],
+            model=data["model"],
+            is_on=data["is_on"],
+            current_volume=data["current_volume"],
+            battery_level=data["battery_level"],
+        )
