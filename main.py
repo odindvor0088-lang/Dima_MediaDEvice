@@ -7,7 +7,7 @@ class MediaDevice(ABC):
     BATTERY_WARNING_LEVEL = 20
     manufacturer_country = "Russia"
 
-    def init(self, brand, model, battery_level, is_on, current_volume):
+    def __init__(self, brand, model, battery_level, is_on, current_volume):
         self.brand = brand
         self.model = model
         self.is_on = is_on
