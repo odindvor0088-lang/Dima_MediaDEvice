@@ -54,13 +54,12 @@ class MediaDevice(ABC):
         return f"{self.brand} {self.model} {self.battery_level} {self.is_on} {self.current_volume}"
 
     @staticmethod
-    def check_battery_health(cycles):
-        my_cycles = list(map(int, cycles))
-        if my_cycles[0] >= 90:
+    def check_battery_health(quantity_cycles):
+        if quantity_cycles[0] >= 90:
             print("Состояние батареи отличное")
-        elif my_cycles[0] >= 70:
+        elif quantity_cycles[0] >= 70:
             print("Состояние батареи хорошее")
-        elif my_cycles[0] >= 40:
+        elif quantity_cycles[0] >= 40:
             print("Состояние батареи среднее")
         else:
             print("Состояние батареи плохое. Поменяйте батарею")
