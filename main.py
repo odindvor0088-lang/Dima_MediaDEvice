@@ -97,3 +97,17 @@ class MediaDevice(ABC):
         if self._battery_level == 0 and self._is_on:
             self._is_on = False
             print("Устройство выключилось из-за разрядки")
+
+    @property
+    def get_current_volume(self):
+        """Геттер для current_volume"""
+        return self._current_volume
+
+    @get_current_volume.setter
+    def get_current_volume(self, value):
+        """Сеттер для current_volume"""
+        if value >= 70:
+            print("Данная громкость может навредить вашему здоровью!")
+
+        self._current_volume = value
+        print(f"Громкость на устройстве: {self._current_volume}")
