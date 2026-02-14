@@ -106,7 +106,13 @@ class MediaDevice(ABC):
     @get_current_volume.setter
     def get_current_volume(self, value):
         """Сеттер для current_volume"""
-        if value >= 70:
+        if not isinstance(value, (int, float)):
+            print("Уровень заряда должен быть числом")
+        if value > self.MAX_VOLUME:
+            print("Громкость не может быть выше 100")
+        elif value < self.MIN_VOLUME:
+            print("Громкость не может быть ниже 0")
+        elif value >= 70:
             print("Данная громкость может навредить вашему здоровью!")
 
         self._current_volume = value
