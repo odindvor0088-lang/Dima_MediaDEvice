@@ -83,4 +83,17 @@ class MediaDevice(ABC):
         self._is_on = value
         print(f"Устройство включено")
 
+    @property
+    def get_battery_level(self):
+        """Геттер для battery_level"""
+        return self._battery_level
 
+    @get_battery_level.setter
+    def get_battery_level(self, value):
+        """Сеттер для battery_level"""
+        self._battery_level = value
+        print(f"Заряд батареи: {self._battery_level}%")
+
+        if self._battery_level == 0 and self._is_on:
+            self._is_on = False
+            print("Устройство выключилось из-за разрядки")
