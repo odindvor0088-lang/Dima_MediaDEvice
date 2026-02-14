@@ -10,7 +10,7 @@ class MediaDevice(ABC):
     def __init__(self, brand, model, battery_level, is_on, current_volume):
         self.brand = brand
         self.model = model
-        self._is_on = is_on
+        self._is_on = False
         self._battery_level = battery_level
         self._current_volume = current_volume
 
@@ -91,6 +91,10 @@ class MediaDevice(ABC):
     @get_battery_level.setter
     def get_battery_level(self, value):
         """Сеттер для battery_level"""
+        if value < 0:
+            print("Значение батареи не может быть меньше 0")
+        elif value > 100:
+            print("Значение батареи не может быть больше 100")
         self._battery_level = value
         print(f"Заряд батареи: {self._battery_level}%")
 
