@@ -10,9 +10,9 @@ class MediaDevice(ABC):
     def __init__(self, brand, model, battery_level, is_on, current_volume):
         self.brand = brand
         self.model = model
-        self.is_on = is_on
-        self.battery_level = battery_level
-        self.current_volume = current_volume
+        self._is_on = is_on
+        self._battery_level = battery_level
+        self._current_volume = current_volume
 
     @abstractmethod
     def play(self):
