@@ -7,7 +7,7 @@ class MediaDevice(ABC):
     BATTERY_WARNING_LEVEL = 20
     manufacturer_country = "Russia"
 
-    def __init__(self, brand, model, battery_level, is_on, current_volume):
+    def __init__(self, brand, model, battery_level, current_volume):
         self.brand = brand
         self.model = model
         self._is_on = False
@@ -67,30 +67,27 @@ class MediaDevice(ABC):
     @classmethod
     def from_dict(cls, data):
         return cls(
-            brand=data["brand"],
-            model=data["model"],
-            is_on=data["is_on"],
-            current_volume=data["current_volume"],
-            battery_level=data["battery_level"],
+            brand=data.get("brand"),
+            model=data.get("model"),
+            current_volume=data.get("current_volume", 0),
+            battery_level=data.get("battery_level", 0),
         )
-    @property
-    def get_is_on(self):
-        """Геттер для is_on"""
-        return self._is_on
-    @get_is_on.setter
-    def is_on(self, value):
-        """Сеттер для is_on"""
-        self._is_on = value
-        print(f"Устройство включено")
 
     @property
-    def get_battery_level(self):
+    def is_on(self):
+        """Геттер для is_on"""
+        return self._is_on
+
+
+    @property
+    def battery_level(self):
         """Геттер для battery_level"""
         return self._battery_level
 
-    @get_battery_level.setter
-    def get_battery_level(self, value):
+    @battery_level.setter
+    def battery_level(self, value):
         """Сеттер для battery_level"""
+        self._is_on = True
         if value < 0:
             print("Значение батареи не может быть меньше 0")
         elif value > 100:
@@ -103,13 +100,14 @@ class MediaDevice(ABC):
             print("Устройство выключилось из-за разрядки")
 
     @property
-    def get_current_volume(self):
+    def current_volume(self):
         """Геттер для current_volume"""
         return self._current_volume
 
-    @get_current_volume.setter
-    def get_current_volume(self, value):
+    @current_volume.setter
+    def current_volume(self, value):
         """Сеттер для current_volume"""
+        self._is_on = True
         if not isinstance(value, (int, float)):
             print("Уровень заряда должен быть числом")
         if value > self.MAX_VOLUME:
