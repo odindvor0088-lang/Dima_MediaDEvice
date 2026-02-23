@@ -43,6 +43,32 @@ class Review:
         print(f'Другие пользователи будут видеть вас под ником: {self.__author}')
 
 
+    @property
+    def date(self):
+        return self.__date
+
+    @date.setter
+    def date(self, value):
+        self.__date = value
+
+
+    @property
+    def pros(self):
+        return self.__pros.copy()
+
+    @pros.setter
+    def pros(self, value):
+        self.__pros.append(value)
+
+
+
+    @property
+    def cons(self):
+        return self.__cons.copy()
+
+    @cons.setter
+    def cons(self, value):
+        self.__cons.append(value)
 
 
 
