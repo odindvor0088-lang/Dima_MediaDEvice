@@ -33,6 +33,16 @@ class Review:
             print(f'Обзор не может состоять только из чисел!')
 
 
+    @property
+    def author(self):
+        return self.__author
+
+    @author.setter
+    def author(self, value):
+        self.__author = value
+        print(f'Другие пользователи будут видеть вас под ником: {self.__author}')
+
+
 
 
 
