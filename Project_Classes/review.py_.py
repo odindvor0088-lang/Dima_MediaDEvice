@@ -62,5 +62,20 @@ class Review:
         return self.__cons.copy()
 
 
-    def
+    def add_pro(self, pro_text):
+        if len(pro_text) > 200:
+            print(f'Текст плюса слишком длинный')
+        else:
+            self.__pros.append(pro_text)
+            print(f'Ваш плюс добавлен✅')
+
+
+
+    def add_con(self, con_text):
+        if len(con_text) > 200:
+            print(f'Текст минуса слишком длинный')
+        else:
+            self.__cons.append(con_text)
+            print(f'Ваш минус добавлен✅')
+
 
