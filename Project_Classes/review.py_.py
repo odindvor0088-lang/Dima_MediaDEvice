@@ -79,3 +79,19 @@ class Review:
             print(f'Ваш минус добавлен✅')
 
 
+    def remove_pro(self, index):
+        if 0 <= index < len(self.__pros):
+            removed = self.__pros.pop(index)
+            print(f"Плюс '{removed}' удалён")
+        else:
+            print(f'Индекс {index} вне диапазона')
+
+
+    def remove_con(self, index):
+        if 0 <= index < len(self.__cons):
+            removed = self.__cons.pop(index)
+            print(f"Минус '{removed}' удалён")
+        else:
+            print(f'Индекс {index} вне диапазона')
+
+
