@@ -4,8 +4,8 @@ class Review:
         self.__content = content
         self.__author = author
         self.__date = date
-        self.__pros = pros
-        self.__cons = cons
+        self.__pros = pros.copy() if pros is not None else []# Не знал как правильно сделать. Посмотрел в gpt
+        self.__cons = cons.copy() if pros is not None else []
 
     @property
     def title(self):
@@ -56,19 +56,11 @@ class Review:
     def pros(self):
         return self.__pros.copy()
 
-    @pros.setter
-    def pros(self, value):
-        self.__pros.append(value)
-
-
 
     @property
     def cons(self):
         return self.__cons.copy()
 
-    @cons.setter
-    def cons(self, value):
-        self.__cons.append(value)
 
-
+    def
 
