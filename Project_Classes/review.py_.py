@@ -1,11 +1,11 @@
 class Review:
-    def __init__(self, title, content, author, date, pros, cons):
+    def __init__(self, title, content, author = "Эксперт", date = None, pros = None, cons = None):
         self.__title = title
         self.__content = content
         self.__author = author
         self.__date = date
-        self.__pros = pros.copy() if pros is not None else []# Не знал как правильно сделать. Посмотрел в gpt
-        self.__cons = cons.copy() if cons is not None else []
+        self.__pros = pros.copy() if pros is not None else []
+        self.__cons = pros.copy() if cons is not None else []
 
     @property
     def title(self):
