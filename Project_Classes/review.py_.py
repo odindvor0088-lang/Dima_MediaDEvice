@@ -5,7 +5,7 @@ class Review:
         self.__author = author
         self.__date = date
         self.__pros = pros.copy() if pros is not None else []# Не знал как правильно сделать. Посмотрел в gpt
-        self.__cons = cons.copy() if pros is not None else []
+        self.__cons = cons.copy() if cons is not None else []
 
     @property
     def title(self):
@@ -93,5 +93,67 @@ class Review:
             print(f"Минус '{removed}' удалён")
         else:
             print(f'Индекс {index} вне диапазона')
+
+
+if __name__ == "__main__":
+    # 1. ТЕСТ СОЗДАНИЯ ОБЗОРА
+    phone_review = Review(
+        title="Samsung Galaxy S24 Ultra",
+        content="Флагманский телефон с отличной камерой и производительностью",
+        author="ТехноБлогер",
+        date="2025-02-23",
+        pros=None,
+        cons=None
+    )
+
+    # 2. ТЕСТ ГЕТТЕРОВ (ЧТЕНИЕ)
+    print(f"{phone_review.title}")
+    print(f"{phone_review.content}")
+    print(f"{phone_review.author}")
+    print(f"{phone_review.date}")
+    print(f"{phone_review.pros}")
+    print(f"{phone_review.cons}")
+
+    # 3. ТЕСТ СЕТТЕРОВ (ИЗМЕНЕНИЕ)
+    print("\n3. ПРОВЕРКА СЕТТЕРОВ:")
+    phone_review.title = "iPhone 15 Pro Max"
+    phone_review.content = "Обзор нового iPhone"
+    phone_review.author = "AppleFan"
+    phone_review.date = "2025-02-24"
+
+    print(f"\nПосле изменений:")
+    print(f"Заголовок: {phone_review.title}")
+    print(f"Автор: {phone_review.author}")
+
+    # 4. ТЕСТ ДОБАВЛЕНИЯ ПЛЮСОВ
+    print("\n4. ДОБАВЛЕНИЕ ПЛЮСОВ:")
+    phone_review.add_pro("Отличный экран")
+    phone_review.add_pro("Быстрая зарядка")
+
+    # Тест слишком длинного плюса
+    long_text = "Очень длинный текст" * 50
+    phone_review.add_pro(long_text)
+
+    print(f"Плюсы сейчас: {phone_review.pros}")
+
+    # 5. ТЕСТ ДОБАВЛЕНИЯ МИНУСОВ
+    print("\n5. ДОБАВЛЕНИЕ МИНУСОВ:")
+    phone_review.add_con("Дорогой")
+    phone_review.add_con("Нет зарядки в комплекте")
+
+    print(f"Минусы сейчас: {phone_review.cons}")
+
+    # 6. ТЕСТ УДАЛЕНИЯ
+    print("\n6. УДАЛЕНИЕ ПЛЮСА ПО ИНДЕКСУ:")
+    print(f"Плюсы до удаления: {phone_review.pros}")
+    phone_review.remove_pro(1)
+    print(f"Плюсы после удаления: {phone_review.pros}")
+
+    # Тест удаления с неверным индексом
+    print("\nТест неверного индекса:")
+    phone_review.remove_pro(10)
+    phone_review.remove_pro(-5)
+
+
 
 
