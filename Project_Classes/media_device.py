@@ -78,7 +78,6 @@ class MediaDevice(ABC):
         """Геттер для is_on"""
         return self._is_on
 
-
     @property
     def battery_level(self):
         """Геттер для battery_level"""
