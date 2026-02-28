@@ -1,21 +1,25 @@
 class Review:
     """
       Класс для представления обзора
-      Атрибуты:
-          title (str): заголовок обзора
-          content (str): текст обзора
-          author (str): автор обзора
-          date (str): дата создания обзора в формате
-          pros (list): список плюсов
-          cons (list): список минусов
       """
-    def __init__(self, title, content, author = "Эксперт", date = None, pros = None, cons = None):
+    def __init__(self, title, content, author = "Эксперт", date = None, pros = None, cons = None) -> None:
+        """
+        Инициализация объекта Review.
+
+        Args:
+            title: Заголовок обзора
+            content: Текст обзора
+            author: Автор обзора (по умолчанию "Эксперт")
+            date: Дата создания
+            pros: Список плюсов
+            cons: Список минусов
+        """
         self.__title = title
         self.__content = content
         self.__author = author
         self.__date = date
         self.__pros = pros.copy() if pros is not None else []
-        self.__cons = pros.copy() if cons is not None else []
+        self.__cons = cons.copy() if cons is not None else []
 
 
 
@@ -40,13 +44,13 @@ class Review:
 
     @property
     def content(self) -> str:
-        """Геттер для содержания. Возвращает текст обзора."""
+        """Возвращает текст обзора."""
         return self.__content
 
 
     @content.setter
     def content(self, value: str) -> None:
-        """ Сеттер для содержания. Принимает новый текст обзора и проверяет его с помощью isinstanse.
+        """Принимает новый текст обзора и проверяет его с помощью isinstanse.
               И выводит сообщение если обзор неправильный.
               """
         if isinstance(value, str):
@@ -59,13 +63,13 @@ class Review:
 
     @property
     def author(self) -> str:
-        """Геттер для автора. Возвращает имя автора обзора."""
+        """Возвращает имя автора обзора."""
         return self.__author
 
 
     @author.setter
     def author(self, value: str) -> None:
-        """ Сеттер для автора. Сохраняет имя автора."""
+        """Сохраняет имя автора."""
         self.__author = value
         print(f'Другие пользователи будут видеть вас под ником: {self.__author}')
 
@@ -73,7 +77,7 @@ class Review:
 
     @property
     def date(self) -> str:
-        """Геттер для даты. Возвращает дату создания обзора."""
+        """Возвращает дату создания обзора."""
         return self.__date
 
 
@@ -85,7 +89,7 @@ class Review:
 
     @property
     def pros(self) -> list:
-        """ Геттер для списка плюсов. Возвращает КОПИЮ списка"""
+        """Возвращает КОПИЮ списка"""
         return self.__pros.copy()
 
 
@@ -131,7 +135,7 @@ class Review:
 
     def remove_pro(self, index: int) -> None:
         """Удаляет плюс по индексу."""
-        if 0 <= index < len(self.__pros):
+        if -len(self.__pros) <= index < len(self.__pros):
             removed = self.__pros.pop(index)
             print(f"Плюс '{removed}' удалён")
         else:
