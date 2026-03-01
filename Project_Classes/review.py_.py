@@ -17,12 +17,13 @@ class Review:
             pros: Список плюсов
             cons: Список минусов
         """
+        # Используем property
         self.title = title
         self.content = content
         self.author = author
-        self.date = datetime.now() if date is None else date
-        self.pros = pros.copy() if pros is not None else []
-        self.cons = cons.copy() if cons is not None else []
+        self.date = date
+        self.pros = pros
+        self.cons = cons
 
     @property
     def title(self) -> str:
@@ -76,7 +77,13 @@ class Review:
 
     @date.setter
     def date(self, new_date: datetime) -> None:
-        self.__date = new_date
+        if new_date is None:
+            self.__date = datetime.now()
+        elif isinstance(new_date, datetime):
+            self.__date = new_date
+        else:
+            print(f'new_date должна быть экземпляром класса datetime!')
+
 
     @property
     def pros(self) -> list[str]:
@@ -86,7 +93,13 @@ class Review:
     @pros.setter
     def pros(self, list_pros: list[str]) -> None:
         """Сохраняется копия списка для инкапсуляции."""
-        self.__pros = list_pros.copy()
+        if list_pros is None:
+            self.__pros = []
+        elif isinstance(list_pros, list):
+            self.__pros = list_pros.copy()
+        else:
+            print(f'list_pros должен быть списком строк!')
+
 
     @property
     def cons(self) -> list:
@@ -96,14 +109,23 @@ class Review:
     @cons.setter
     def cons(self, list_cons: list) -> None:
         """Сохраняется копия списка для инкапсуляции."""
-        self.__cons = list_cons.copy()
+        if list_cons is None:
+            self.__cons = []
+        elif isinstance(list_cons, list):
+            self.__cons = list_cons.copy()
+        else:
+            print(f'list_cons должен быть списком строк!')
 
     def add_pro(self, pro_text: str) -> None:
         """
         Добавляет новый плюс в список.
         :param pro_text: текст плюса
         """
-        if len(pro_text) > 200:
+        if not isinstance(pro_text, str):
+            print(f'Плюс должен быть строкой!')
+        elif not pro_text.strip():
+            print(f'Плюс не может быть пустой строкой!')
+        elif len(pro_text) > 200:
             print(f'Текст плюса слишком длинный')
         else:
             self.__pros.append(pro_text)
@@ -114,10 +136,14 @@ class Review:
         Добавляет новый минус в список.
         :param con_text: текст минуса
         """
-        if len(con_text) > 200:
+        if not isinstance(con_text, str):
+            print(f'Минус должен быть строкой!')
+        elif not con_text.strip():
+            print(f'Минус не может быть пустой строкой!')
+        elif len(con_text) > 200:
             print(f'Текст минуса слишком длинный')
         else:
-            self.__cons.append(con_text)
+            self.__pros.append(con_text)
             print(f'Ваш минус добавлен✅')
 
     def remove_pro(self, index: int) -> None:
