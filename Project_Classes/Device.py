@@ -104,4 +104,17 @@ class Device(ABC):
             else:
                 self.is_on = is_on
 
+        @abstractmethod
+        def play(self) -> None:
+            pass
+
+        @abstractmethod
+        def stop(self) -> None:
+            pass
+
+        @abstractmethod
+        def get_device_type(self) -> str:
+            pass
+
+
 
