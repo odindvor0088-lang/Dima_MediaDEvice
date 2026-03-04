@@ -16,6 +16,9 @@ class Device(ABC):
         self.image = image
         self._specs = {}
         self._review = None
+        self.battery_level = 100
+        self.current_volume = 50
+        self.is_on = False
 
     @property
     def category(self) -> str:
@@ -26,12 +29,11 @@ class Device(ABC):
     def category(self, category: str) -> None:
         """Принимает новую категорию и обрабатывает её."""
         if category.upper() not in self.ALLOWED_CATEGORIES:
-            print(f'Категории: {category}. Нет в списке ')
+            print(f'Категории: {category}. Нет в списке! ')
         elif not isinstance(category, str):
             print(f'Категория должна состоять из букв!')
         else:
             self.category = category
-
 
     @property
     def year(self) -> int:
@@ -55,5 +57,51 @@ class Device(ABC):
     def image(self, image: str) -> None:
         """Принимает новый экран модели и обрабатывает её."""
         self.image = image
+
+    @property
+    def battery_level(self) -> int:
+        """Возвращает текущий заряд модели."""
+        return self.battery_level
+
+    @battery_level.setter
+    def battery_level(self, battery_level: int) -> None:
+        """ Принимает новый заряд модели и обрабатывает её."""
+        if not isinstance(battery_level, int):
+            print(f'Заряд модели должен состоять из чисел!')
+        elif battery_level < 0:
+            print(f'Заряд модели не может быть меньше 0!')
+        elif battery_level > 100:
+            print(f'Заряд модели не может быть больше 100!')
+        else:
+            self.battery_level = battery_level
+
+    @property
+    def current_volume(self) -> int:
+        """Возвращает текущую громкость модели."""
+        return self.current_volume
+
+    @current_volume.setter
+    def current_volume(self, current_volume: int) -> None:
+        """ Принимает новую громкость модели и обрабатывает её."""
+        if not isinstance(current_volume, int):
+            print(f'Громкость модели должен состоять из чисел!')
+        elif current_volume < 0:
+            print(f'Громкость модели не может быть меньше 0!')
+        elif current_volume > 100:
+            print(f'Громкость модели не может быть больше 100!')
+        else:
+            self.current_volume = current_volume
+
+        @property
+        def is_on(self) -> bool:
+            """Возвращает текущее состояние модели."""
+            return self.is_on
+
+        @is_on.setter
+        def is_on(self, is_on: bool) -> None:
+            if not isinstance(is_on, bool):
+                print(f'Состояние должно быть булевым значением (True/False)!')
+            else:
+                self.is_on = is_on
 
 
