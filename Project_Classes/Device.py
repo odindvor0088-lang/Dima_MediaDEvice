@@ -14,6 +14,8 @@ class Device(ABC):
         self.category = category
         self.year = year
         self.image = image
+        self._specs = {}
+        self._review = None
 
     @property
     def category(self) -> str:
