@@ -90,29 +90,29 @@ class Device(ABC):
         else:
             self.current_volume = current_volume
 
-        @property
-        def is_on(self) -> bool:
-            """Возвращает текущее состояние модели."""
-            return self.is_on
+    @property
+    def is_on(self) -> bool:
+        """Возвращает текущее состояние модели."""
+        return self.is_on
 
-        @is_on.setter
-        def is_on(self, is_on: bool) -> None:
-            if not isinstance(is_on, bool):
-                print(f'Состояние должно быть булевым значением (True/False)!')
-            else:
-                self.is_on = is_on
+    @is_on.setter
+    def is_on(self, is_on: bool) -> None:
+        if not isinstance(is_on, bool):
+            print(f'Состояние должно быть булевым значением (True/False)!')
+        else:
+            self.is_on = is_on
 
-        @abstractmethod
-        def play(self) -> None:
-            pass
+    @abstractmethod
+    def play(self) -> None:
+        pass
 
-        @abstractmethod
-        def stop(self) -> None:
-            pass
+    @abstractmethod
+    def stop(self) -> None:
+        pass
 
-        @abstractmethod
-        def get_device_type(self) -> str:
-            pass
+    @abstractmethod
+    def get_device_type(self) -> str:
+        pass
 
 
 
