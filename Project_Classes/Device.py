@@ -28,10 +28,8 @@ class Device(ABC):
     @category.setter
     def category(self, category: str) -> None:
         """Принимает новую категорию и обрабатывает её."""
-        if category.upper() not in self.ALLOWED_CATEGORIES:
+        if category.title() not in self.ALLOWED_CATEGORIES:
             print(f'Категории: {category}. Нет в списке! ')
-        elif not isinstance(category, str):
-            print(f'Категория должна состоять из букв!')
         else:
             self.category = category
 
