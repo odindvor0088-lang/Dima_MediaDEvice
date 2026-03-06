@@ -117,7 +117,7 @@ class Device(ABC):
     @property
     def current_volume(self) -> int:
         """Возвращает текущую громкость модели."""
-        return self.current_volume
+        return self._current_volume
 
     @current_volume.setter
     def current_volume(self, current_volume: int) -> None:
@@ -128,12 +128,12 @@ class Device(ABC):
         """
         if not isinstance(current_volume, int):
             print(f'Громкость модели должен состоять из чисел!')
-        elif current_volume < 0:
+        elif current_volume < self.MIN_VOLUME:
             print(f'Громкость модели не может быть меньше 0!')
-        elif current_volume > 100:
+        elif current_volume > self.MAX_VOLUME:
             print(f'Громкость модели не может быть больше 100!')
         else:
-            self.current_volume = current_volume
+            self._current_volume = current_volume
 
     @property
     def is_on(self) -> bool:
