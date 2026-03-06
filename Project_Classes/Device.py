@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from datetime import datetime
 
 
 class Device(ABC):
@@ -50,7 +51,7 @@ class Device(ABC):
     @property
     def year(self) -> int:
         """Возвращает текущий год модели."""
-        return self.year
+        return self._year
 
     @year.setter
     def year(self, year: int) -> None:
@@ -59,10 +60,21 @@ class Device(ABC):
         :param year: Новое значение годы.
         :return: None.
         """
-        if not isinstance(year, int):
+        current_year = datetime.now().year
+        min_value = 1990
+        if year is None:
+            self._year = None
+            return
+        if not isinstance(year, int) and year >= min_value:
             print(f'Год модели {self.model} должен состоять из чисел!')
+            return
+        if year < min_value:
+            print(f'Год модели {self.model} не может быть раньше {min_value}!')
+        elif year > current_year:
+            print(f'Год модели {self.model} не может быть позже {current_year}!')
         else:
-            self.year = year
+            self._year = year
+
 
     @property
     def image(self) -> str:
