@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
-from review import Review
+
 
 class Device(ABC):
     """Класс для создания устройства"""
@@ -138,7 +138,7 @@ class Device(ABC):
     @property
     def is_on(self) -> bool:
         """Возвращает текущее состояние модели."""
-        return self.is_on
+        return self._is_on
 
     @is_on.setter
     def is_on(self, is_on: bool) -> None:
@@ -149,8 +149,13 @@ class Device(ABC):
                 """
         if not isinstance(is_on, bool):
             print(f'Состояние должно быть булевым значением (True/False)!')
+            return
+        if is_on and self._is_on:
+            print("Устройство уже включено")
+        elif not is_on and not self._is_on:
+            print("Устройство уже выключено")
         else:
-            self.is_on = is_on
+            self._is_on = is_on
 
     @abstractmethod
     def play(self) -> None:
