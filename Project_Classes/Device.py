@@ -2,13 +2,23 @@ from abc import ABC, abstractmethod
 
 
 class Device(ABC):
+    """Класс для создания устройства"""
 
     MIN_VOLUME = 0
     MAX_VOLUME = 100
     BATTERY_WARNING_LEVEL = 20
     ALLOWED_CATEGORIES = ["Смартфоны", "Наушники", "Ноутбуки", "Планшеты", "Умные часы"]
 
-    def __init__(self, brand: str, model: str, category: str,  year: int = None,  image = None) -> None:
+    def __init__(self, brand: str, model: str, category: str,  year: int = None,  image: str = None) -> None:
+        """
+        Инициализация объекта Device
+
+         brand: Брэнд устройства
+         model: Модель устройства
+         category: Категория устройства
+         year: Год выпуска устройства
+         image: Разрешение устройстваЫ
+        """
         self.brand = brand
         self.model = model
         self.category = category
@@ -27,7 +37,11 @@ class Device(ABC):
 
     @category.setter
     def category(self, category: str) -> None:
-        """Принимает новую категорию и обрабатывает её."""
+        """
+        Принимает новую категорию и обрабатывает её.
+        :param category: Новая категория.
+        :return: None.
+        """
         if category.title() not in self.ALLOWED_CATEGORIES:
             print(f'Категории: {category}. Нет в списке! ')
         else:
@@ -40,7 +54,11 @@ class Device(ABC):
 
     @year.setter
     def year(self, year: int) -> None:
-        """Принимает новый год модели и обрабатывает её."""
+        """
+        Принимает новый год модели и обрабатывает её.
+        :param year: Новое значение годы.
+        :return: None.
+        """
         if not isinstance(year, int):
             print(f'Год модели {self.model} должен состоять из чисел!')
         else:
@@ -53,7 +71,11 @@ class Device(ABC):
 
     @image.setter
     def image(self, image: str) -> None:
-        """Принимает новый экран модели и обрабатывает её."""
+        """
+        Принимает новый экран модели и обрабатывает её.
+        :param image: Новое значение изображения.
+        :return: None.
+        """
         self.image = image
 
     @property
@@ -63,7 +85,11 @@ class Device(ABC):
 
     @battery_level.setter
     def battery_level(self, battery_level: int) -> None:
-        """ Принимает новый заряд модели и обрабатывает её."""
+        """
+        Принимает новый заряд модели и обрабатывает её.
+        :param battery_level: Новое значение заряда.
+        :return: None.
+        """
         if not isinstance(battery_level, int):
             print(f'Заряд модели должен состоять из чисел!')
         elif battery_level < 0:
@@ -80,7 +106,11 @@ class Device(ABC):
 
     @current_volume.setter
     def current_volume(self, current_volume: int) -> None:
-        """ Принимает новую громкость модели и обрабатывает её."""
+        """
+        Принимает новую громкость модели и обрабатывает её.
+        :param current_volume: Новое значение уровня звука.
+        :return: None.
+        """
         if not isinstance(current_volume, int):
             print(f'Громкость модели должен состоять из чисел!')
         elif current_volume < 0:
@@ -97,6 +127,11 @@ class Device(ABC):
 
     @is_on.setter
     def is_on(self, is_on: bool) -> None:
+        """
+                Принимает новое состояние модели и проверяет ее.
+                :param is_on: Новое состояние модели.
+                :return: None.
+                """
         if not isinstance(is_on, bool):
             print(f'Состояние должно быть булевым значением (True/False)!')
         else:
@@ -112,6 +147,7 @@ class Device(ABC):
 
     @abstractmethod
     def get_device_type(self) -> str:
+        #Возвращает текущую категория устройства
         pass
 
 
