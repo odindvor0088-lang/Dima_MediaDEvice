@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
-
+from review import Review
 
 class Device(ABC):
     """Класс для создания устройства"""
@@ -93,7 +93,7 @@ class Device(ABC):
     @property
     def battery_level(self) -> int:
         """Возвращает текущий заряд модели."""
-        return self.battery_level
+        return self._battery_level
 
     @battery_level.setter
     def battery_level(self, battery_level: int) -> None:
@@ -108,8 +108,11 @@ class Device(ABC):
             print(f'Заряд модели не может быть меньше 0!')
         elif battery_level > 100:
             print(f'Заряд модели не может быть больше 100!')
+        elif battery_level <= 20:
+            print(f'Предупреждение: низкий заряд')
+            self._battery_level = battery_level
         else:
-            self.battery_level = battery_level
+            self._battery_level = battery_level
 
     @property
     def current_volume(self) -> int:
@@ -166,6 +169,12 @@ class Device(ABC):
     def specs(self) -> dict:
         """Возвращает текущие характеристики."""
         return self.specs.copy()
+
+    @property
+    def review(self):
+        """Возвращает текущий обзор."""
+        return self._review
+
 
 
 
