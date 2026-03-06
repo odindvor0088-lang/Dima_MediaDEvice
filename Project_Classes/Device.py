@@ -162,5 +162,10 @@ class Device(ABC):
         #Возвращает текущую категория устройства
         pass
 
+    @property
+    def specs(self) -> dict:
+        """Возвращает текущие характеристики."""
+        return self.specs.copy()
+
 
 
