@@ -180,6 +180,37 @@ class Device(ABC):
         """Возвращает текущий обзор."""
         return self._review
 
+# Создаем устройство
+phone = Device("Apple", "iPhone 13", "Смартфоны", 2021, "iphone.jpg")
+
+# Тест 1: Категория
+phone.category = "Смартфоны"
+phone.category = "Телефоны"
+
+# Тест 2: Год
+phone.year = 1990
+phone.year = 1989
+phone.year = 2027
+phone.year = None
+
+# Тест 3: Заряд батареи
+phone.battery_level = 20
+phone.battery_level = 19
+phone.battery_level = -1
+phone.battery_level = 101
+
+# Тест 4: Громкость
+phone.current_volume = 0
+phone.current_volume = 100
+phone.current_volume = -1
+phone.current_volume = 101
+
+# Тест 5: Состояние
+phone.is_on = True
+phone.is_on = True
+phone.is_on = False
+phone.is_on = False
+
 
 
 
