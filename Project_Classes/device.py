@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
 
+from Project_Classes.review import Review
 
 class Device(ABC):
     """Класс для создания устройства"""
@@ -60,18 +61,14 @@ class Device(ABC):
         :param year: Новое значение годы.
         :return: None.
         """
-        current_year = datetime.now().year
-        min_value = 1990
         if year is None:
             self._year = None
-            return
-        if not isinstance(year, int) and year >= min_value:
+        elif not isinstance(year, int):
             print(f'Год модели {self.model} должен состоять из чисел!')
-            return
-        if year < min_value:
-            print(f'Год модели {self.model} не может быть раньше {min_value}!')
-        elif year > current_year:
-            print(f'Год модели {self.model} не может быть позже {current_year}!')
+        elif year < 1990:
+            print(f'Год модели {self.model} не может быть раньше 1990!')
+        elif year > datetime.now().year:
+            print(f'Год модели {self.model} не может быть позже {datetime.now().year}!')
         else:
             self._year = year
 
@@ -121,11 +118,7 @@ class Device(ABC):
 
     @current_volume.setter
     def current_volume(self, current_volume: int) -> None:
-        """
-        Принимает новую громкость модели и обрабатывает её.
-        :param current_volume: Новое значение уровня звука.
-        :return: None.
-        """
+
         if not isinstance(current_volume, int):
             print(f'Громкость модели должен состоять из чисел!')
         elif current_volume < self.MIN_VOLUME:
@@ -143,16 +136,15 @@ class Device(ABC):
     @is_on.setter
     def is_on(self, is_on: bool) -> None:
         """
-                Принимает новое состояние модели и проверяет ее.
-                :param is_on: Новое состояние модели.
-                :return: None.
-                """
+             Принимает новое состояние модели и проверяет ее.
+             :param is_on: Новое состояние модели.
+             :return: None.
+        """
         if not isinstance(is_on, bool):
             print(f'Состояние должно быть булевым значением (True/False)!')
-            return
-        if is_on and self._is_on:
+        elif self._is_on:
             print("Устройство уже включено")
-        elif not is_on and not self._is_on:
+        elif not self._is_on:
             print("Устройство уже выключено")
         else:
             self._is_on = is_on
@@ -179,6 +171,18 @@ class Device(ABC):
     def review(self):
         """Возвращает текущий обзор."""
         return self._review
+
+    @review.setter
+    def review(self, review: Review) -> None:
+        """
+            Принимает новое ревью модели и обрабатывает её.
+            :param review: Новое значение уровня звука.
+            :return: None.
+        """
+        if not isinstance(review, Review):
+            print(f'review должно быть в классе Review!')
+        else:
+            self._review = review
 
 # Создаем устройство
 phone = Device("Apple", "iPhone 13", "Смартфоны", 2021, "iphone.jpg")
