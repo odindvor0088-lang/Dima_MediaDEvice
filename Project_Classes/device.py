@@ -23,9 +23,9 @@ class Device(ABC):
         """
         self.brand = brand
         self.model = model
-        self.category = category
-        self.year = year
-        self.image = image
+        self.category = category    # присваиваем через свойство
+        self.year = year            # присваиваем через свойство
+        self.image = image          # присваиваем через свойство
         self._specs = {}
         self._review = None
         self.battery_level = 100
