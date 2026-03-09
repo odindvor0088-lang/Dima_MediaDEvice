@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
+from datetime import datetime
 
+from Project_Classes.review import Review
 
 class Device(ABC):
     """Класс для создания устройства"""
@@ -21,9 +23,9 @@ class Device(ABC):
         """
         self.brand = brand
         self.model = model
-        self.category = category
-        self.year = year
-        self.image = image
+        self.category = category    # присваиваем через свойство
+        self.year = year            # присваиваем через свойство
+        self.image = image          # присваиваем через свойство
         self._specs = {}
         self._review = None
         self.battery_level = 100
@@ -50,7 +52,7 @@ class Device(ABC):
     @property
     def year(self) -> int:
         """Возвращает текущий год модели."""
-        return self.year
+        return self._year
 
     @year.setter
     def year(self, year: int) -> None:
@@ -59,10 +61,17 @@ class Device(ABC):
         :param year: Новое значение годы.
         :return: None.
         """
-        if not isinstance(year, int):
+        if year is None:
+            self._year = None
+        elif not isinstance(year, int):
             print(f'Год модели {self.model} должен состоять из чисел!')
+        elif year < 1990:
+            print(f'Год модели {self.model} не может быть раньше 1990!')
+        elif year > datetime.now().year:
+            print(f'Год модели {self.model} не может быть позже {datetime.now().year}!')
         else:
-            self.year = year
+            self._year = year
+
 
     @property
     def image(self) -> str:
@@ -81,7 +90,7 @@ class Device(ABC):
     @property
     def battery_level(self) -> int:
         """Возвращает текущий заряд модели."""
-        return self.battery_level
+        return self._battery_level
 
     @battery_level.setter
     def battery_level(self, battery_level: int) -> None:
@@ -96,46 +105,49 @@ class Device(ABC):
             print(f'Заряд модели не может быть меньше 0!')
         elif battery_level > 100:
             print(f'Заряд модели не может быть больше 100!')
+        elif battery_level <= 20:
+            print(f'Предупреждение: низкий заряд')
+            self._battery_level = battery_level
         else:
-            self.battery_level = battery_level
+            self._battery_level = battery_level
 
     @property
     def current_volume(self) -> int:
         """Возвращает текущую громкость модели."""
-        return self.current_volume
+        return self._current_volume
 
     @current_volume.setter
     def current_volume(self, current_volume: int) -> None:
-        """
-        Принимает новую громкость модели и обрабатывает её.
-        :param current_volume: Новое значение уровня звука.
-        :return: None.
-        """
+
         if not isinstance(current_volume, int):
             print(f'Громкость модели должен состоять из чисел!')
-        elif current_volume < 0:
+        elif current_volume < self.MIN_VOLUME:
             print(f'Громкость модели не может быть меньше 0!')
-        elif current_volume > 100:
+        elif current_volume > self.MAX_VOLUME:
             print(f'Громкость модели не может быть больше 100!')
         else:
-            self.current_volume = current_volume
+            self._current_volume = current_volume
 
     @property
     def is_on(self) -> bool:
         """Возвращает текущее состояние модели."""
-        return self.is_on
+        return self._is_on
 
     @is_on.setter
     def is_on(self, is_on: bool) -> None:
         """
-                Принимает новое состояние модели и проверяет ее.
-                :param is_on: Новое состояние модели.
-                :return: None.
-                """
+             Принимает новое состояние модели и проверяет ее.
+             :param is_on: Новое состояние модели.
+             :return: None.
+        """
         if not isinstance(is_on, bool):
             print(f'Состояние должно быть булевым значением (True/False)!')
+        elif self._is_on:
+            print("Устройство уже включено")
+        elif not self._is_on:
+            print("Устройство уже выключено")
         else:
-            self.is_on = is_on
+            self._is_on = is_on
 
     @abstractmethod
     def play(self) -> None:
@@ -149,6 +161,60 @@ class Device(ABC):
     def get_device_type(self) -> str:
         #Возвращает текущую категория устройства
         pass
+
+    @property
+    def specs(self) -> dict:
+        """Возвращает текущие характеристики."""
+        return self.specs.copy()
+
+    @property
+    def review(self):
+        """Возвращает текущий обзор."""
+        return self._review
+
+    @review.setter
+    def review(self, review: Review) -> None:
+        """
+            Принимает новое ревью модели и обрабатывает её.
+            :param review: Новое значение уровня звука.
+            :return: None.
+        """
+        if not isinstance(review, Review):
+            print(f'review должно быть в классе Review!')
+        else:
+            self._review = review
+
+# Создаем устройство
+phone = Device("Apple", "iPhone 13", "Смартфоны", 2021, "iphone.jpg")
+
+# Тест 1: Категория
+phone.category = "Смартфоны"
+phone.category = "Телефоны"
+
+# Тест 2: Год
+phone.year = 1990
+phone.year = 1989
+phone.year = 2027
+phone.year = None
+
+# Тест 3: Заряд батареи
+phone.battery_level = 20
+phone.battery_level = 19
+phone.battery_level = -1
+phone.battery_level = 101
+
+# Тест 4: Громкость
+phone.current_volume = 0
+phone.current_volume = 100
+phone.current_volume = -1
+phone.current_volume = 101
+
+# Тест 5: Состояние
+phone.is_on = True
+phone.is_on = True
+phone.is_on = False
+phone.is_on = False
+
 
 
 
