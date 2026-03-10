@@ -28,9 +28,6 @@ class Device(ABC):
         self.image = image          # присваиваем через свойство
         self._specs = {}
         self._review = None
-        self.battery_level = 100
-        self.current_volume = 50
-        self.is_on = False
 
     @property
     def category(self) -> str:
@@ -87,79 +84,9 @@ class Device(ABC):
         """
         self.image = image
 
-    @property
-    def battery_level(self) -> int:
-        """Возвращает текущий заряд модели."""
-        return self._battery_level
-
-    @battery_level.setter
-    def battery_level(self, battery_level: int) -> None:
-        """
-        Принимает новый заряд модели и обрабатывает её.
-        :param battery_level: Новое значение заряда.
-        :return: None.
-        """
-        if not isinstance(battery_level, int):
-            print(f'Заряд модели должен состоять из чисел!')
-        elif battery_level < 0:
-            print(f'Заряд модели не может быть меньше 0!')
-        elif battery_level > 100:
-            print(f'Заряд модели не может быть больше 100!')
-        elif battery_level <= 20:
-            print(f'Предупреждение: низкий заряд')
-            self._battery_level = battery_level
-        else:
-            self._battery_level = battery_level
-
-    @property
-    def current_volume(self) -> int:
-        """Возвращает текущую громкость модели."""
-        return self._current_volume
-
-    @current_volume.setter
-    def current_volume(self, current_volume: int) -> None:
-
-        if not isinstance(current_volume, int):
-            print(f'Громкость модели должен состоять из чисел!')
-        elif current_volume < self.MIN_VOLUME:
-            print(f'Громкость модели не может быть меньше 0!')
-        elif current_volume > self.MAX_VOLUME:
-            print(f'Громкость модели не может быть больше 100!')
-        else:
-            self._current_volume = current_volume
-
-    @property
-    def is_on(self) -> bool:
-        """Возвращает текущее состояние модели."""
-        return self._is_on
-
-    @is_on.setter
-    def is_on(self, is_on: bool) -> None:
-        """
-             Принимает новое состояние модели и проверяет ее.
-             :param is_on: Новое состояние модели.
-             :return: None.
-        """
-        if not isinstance(is_on, bool):
-            print(f'Состояние должно быть булевым значением (True/False)!')
-        elif self._is_on:
-            print("Устройство уже включено")
-        elif not self._is_on:
-            print("Устройство уже выключено")
-        else:
-            self._is_on = is_on
-
-    @abstractmethod
-    def play(self) -> None:
-        pass
-
-    @abstractmethod
-    def stop(self) -> None:
-        pass
-
     @abstractmethod
     def get_device_type(self) -> str:
-        #Возвращает текущую категория устройства
+        """Возвращает текущую категория устройства."""
         pass
 
     @property
@@ -176,13 +103,35 @@ class Device(ABC):
     def review(self, review: Review) -> None:
         """
             Принимает новое ревью модели и обрабатывает её.
-            :param review: Новое значение уровня звука.
+            :param review: Новое значение ревью.
             :return: None.
         """
         if not isinstance(review, Review):
-            print(f'review должно быть в классе Review!')
+            print(f'должен быть review!')
         else:
             self._review = review
+
+    def add_spec(self, key: str, value: str | int | float) -> None:
+        """
+            Добавляет и обновляет характеристики в словаре spec.
+            Если ключ уже существует, то значение перезаписывается
+            :param key: Имя ключа.
+            :param value: Значение ключа.
+            :return: None.
+        """
+        self._specs[key] = value
+
+    def remove_spec(self, key: str) -> None:
+        """
+            Удаляет характеристику по ключу из spec
+            :param key: Имя ключа.
+            :return: None.
+        """
+        if key in self._specs:
+            del self._specs[key]
+        else:
+            print(f'ключ не найден!')
+            
 
 # Создаем устройство
 phone = Device("Apple", "iPhone 13", "Смартфоны", 2021, "iphone.jpg")
