@@ -25,14 +25,14 @@ class Device(ABC):
         self.model = model
         self.category = category    # присваиваем через свойство
         self.year = year            # присваиваем через свойство
-        self.image = image          # присваиваем через свойство
+        self._image = None
         self._specs = {}
         self._review = None
 
     @property
     def category(self) -> str:
         """Возвращает текущую категорию."""
-        return self.category
+        return self._category
 
     @category.setter
     def category(self, category: str) -> None:
@@ -41,10 +41,10 @@ class Device(ABC):
         :param category: Новая категория.
         :return: None.
         """
-        if category.title() not in self.ALLOWED_CATEGORIES:
-            print(f'Категории: {category}. Нет в списке! ')
+        if category.upper() in self.ALLOWED_CATEGORIES:
+            self._category = category
         else:
-            self.category = category
+            print(f'Категории: {category}. Нет в списке! ')
 
     @property
     def year(self) -> int:
@@ -73,7 +73,7 @@ class Device(ABC):
     @property
     def image(self) -> str:
         """Возвращает текущий экран модели."""
-        return self.image
+        return self._image
 
     @image.setter
     def image(self, image: str) -> None:
@@ -82,7 +82,7 @@ class Device(ABC):
         :param image: Новое значение изображения.
         :return: None.
         """
-        self.image = image
+        self._image = image
 
     @abstractmethod
     def get_device_type(self) -> str:
@@ -92,7 +92,7 @@ class Device(ABC):
     @property
     def specs(self) -> dict:
         """Возвращает текущие характеристики."""
-        return self.specs.copy()
+        return self._specs.copy()
 
     @property
     def review(self):
