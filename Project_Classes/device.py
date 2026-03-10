@@ -61,11 +61,11 @@ class Device(ABC):
         if year is None:
             self._year = None
         elif not isinstance(year, int):
-            print(f'Год модели {self.model} должен состоять из чисел!')
+            print(f'Год модели {self._model} должен состоять из чисел!')
         elif year < 1990:
-            print(f'Год модели {self.model} не может быть раньше 1990!')
+            print(f'Год модели {self._model} не может быть раньше 1990!')
         elif year > datetime.now().year:
-            print(f'Год модели {self.model} не может быть позже {datetime.now().year}!')
+            print(f'Год модели {self._model} не может быть позже {datetime.now().year}!')
         else:
             self._year = year
 
@@ -136,38 +136,9 @@ class Device(ABC):
             del self._specs[key]
         else:
             print(f'ключ не найден!')
-            
 
-# Создаем устройство
-phone = Device("Apple", "iPhone 13", "Смартфоны", 2021, "iphone.jpg")
 
-# Тест 1: Категория
-phone.category = "Смартфоны"
-phone.category = "Телефоны"
 
-# Тест 2: Год
-phone.year = 1990
-phone.year = 1989
-phone.year = 2027
-phone.year = None
-
-# Тест 3: Заряд батареи
-phone.battery_level = 20
-phone.battery_level = 19
-phone.battery_level = -1
-phone.battery_level = 101
-
-# Тест 4: Громкость
-phone.current_volume = 0
-phone.current_volume = 100
-phone.current_volume = -1
-phone.current_volume = 101
-
-# Тест 5: Состояние
-phone.is_on = True
-phone.is_on = True
-phone.is_on = False
-phone.is_on = False
 
 
 
