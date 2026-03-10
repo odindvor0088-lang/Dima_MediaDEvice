@@ -21,11 +21,11 @@ class Device(ABC):
          year: Год выпуска устройства
          image: Разрешение устройстваЫ
         """
-        self.brand = brand
-        self.model = model
+        self._brand = brand
+        self._model = model
         self.category = category    # присваиваем через свойство
         self.year = year            # присваиваем через свойство
-        self._image = None
+        self._image = None          # присваиваем через свойство
         self._specs = {}
         self._review = None
 
@@ -87,6 +87,11 @@ class Device(ABC):
     @abstractmethod
     def get_device_type(self) -> str:
         """Возвращает текущую категория устройства."""
+        pass
+
+    @abstractmethod
+    def get_short_description(self) -> str:
+        """Возвращает краткое описание устройства (для превью на сайте)."""
         pass
 
     @property
