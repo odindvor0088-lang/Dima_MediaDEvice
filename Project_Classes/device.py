@@ -65,18 +65,23 @@ class Device(ABC):
 
 
     @property
-    def image(self) -> str:
+    def image(self) -> str | None:
         """Возвращает текущий экран модели."""
         return self._image
 
     @image.setter
-    def image(self, image: str) -> None:
+    def image(self, new_image: str) -> str | None:
         """
         Принимает новый экран модели и обрабатывает её.
-        :param image: Новое значение изображения.
+        :param new_image: Новое значение изображения.
         :return: None.
         """
-        self._image = image
+        if new_image is None:
+            pass
+        elif not isinstance(new_image, (str, type(None))):
+            print(f'Значение экрана должно быть числом или None!')
+        else:
+            self._image = new_image
 
     @abstractmethod
     def get_device_type(self) -> str:
