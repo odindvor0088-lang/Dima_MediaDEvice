@@ -5,13 +5,9 @@ from Project_Classes.review import Review
 
 class Device(ABC):
     """Класс для создания устройства"""
-
-    MIN_VOLUME = 0
-    MAX_VOLUME = 100
-    BATTERY_WARNING_LEVEL = 20
     ALLOWED_CATEGORIES = ["Смартфоны", "Наушники", "Ноутбуки", "Планшеты", "Умные часы"]
 
-    def __init__(self, brand: str, model: str, category: str,  year: int = None,  image: str = None) -> None:
+    def __init__(self, brand: str, model: str, category: str,  year: int = None,  image: str = None, specs: dict = None, review: Review = None) -> None:
         """
         Инициализация объекта Device
 
@@ -21,13 +17,13 @@ class Device(ABC):
          year: Год выпуска устройства
          image: Разрешение устройстваЫ
         """
-        self._brand = brand
-        self._model = model
+        self.brand = brand
+        self.model = model
         self.category = category    # присваиваем через свойство
         self.year = year            # присваиваем через свойство
-        self._image = None          # присваиваем через свойство
-        self._specs = {}
-        self._review = None
+        self.image = None          # присваиваем через свойство
+        self.specs = specs
+        self.review = None
 
     @property
     def category(self) -> str:
@@ -61,11 +57,11 @@ class Device(ABC):
         if year is None:
             self._year = None
         elif not isinstance(year, int):
-            print(f'Год модели {self._model} должен состоять из чисел!')
+            print(f'Год модели {self.model} должен состоять из чисел!')
         elif year < 1990:
-            print(f'Год модели {self._model} не может быть раньше 1990!')
+            print(f'Год модели {self.model} не может быть раньше 1990!')
         elif year > datetime.now().year:
-            print(f'Год модели {self._model} не может быть позже {datetime.now().year}!')
+            print(f'Год модели {self.model} не может быть позже {datetime.now().year}!')
         else:
             self._year = year
 
@@ -97,7 +93,16 @@ class Device(ABC):
     @property
     def specs(self) -> dict:
         """Возвращает текущие характеристики."""
-        return self._specs.copy()
+        return self._specs
+
+    @specs.setter
+    def specs(self, specs: dict) -> None:
+        """
+            Принимает новое ревью модели и обрабатывает её.
+            :param review: Новое значение ревью.
+            :return: None.
+        """
+        self._specs = specs
 
     @property
     def review(self):
@@ -116,6 +121,12 @@ class Device(ABC):
         else:
             self._review = review
 
+    @property
+    def specs(self):
+        """<UNK> <UNK> <UNK>."""
+        return self._specs
+
+
     def add_spec(self, key: str, value: str | int | float) -> None:
         """
             Добавляет и обновляет характеристики в словаре spec.
@@ -124,7 +135,7 @@ class Device(ABC):
             :param value: Значение ключа.
             :return: None.
         """
-        self._specs[key] = value
+        self.specs[key] = value
 
     def remove_spec(self, key: str) -> None:
         """
@@ -132,8 +143,8 @@ class Device(ABC):
             :param key: Имя ключа.
             :return: None.
         """
-        if key in self._specs:
-            del self._specs[key]
+        if key in self.specs:
+            del self.specs[key]
         else:
             print(f'ключ не найден!')
 
