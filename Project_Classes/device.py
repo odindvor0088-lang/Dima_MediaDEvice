@@ -19,11 +19,11 @@ class Device(ABC):
         """
         self.brand = brand
         self.model = model
-        self.category = category    # присваиваем через свойство
-        self.year = year            # присваиваем через свойство
-        self.image = None          # присваиваем через свойство
-        self.specs = specs
-        self.review = None
+        self.category = category     # присваиваем через свойство
+        self.year = year             # присваиваем через свойство
+        self.image = image           # присваиваем через свойство
+        self.specs = specs           # присваиваем через свойство
+        self.review = review         # присваиваем через свойство
 
     @property
     def category(self) -> str:
@@ -73,11 +73,12 @@ class Device(ABC):
     def image(self, new_image: str) -> str | None:
         """
         Принимает новый экран модели и обрабатывает её.
+        Если передано None, то будет установлена картинка по умолчанию.
         :param new_image: Новое значение изображения.
-        :return: None.
+        :return: str | None.
         """
         if new_image is None:
-            pass
+            self._image = '/'
         elif not isinstance(new_image, (str, type(None))):
             print(f'Значение экрана должно быть числом или None!')
         else:
