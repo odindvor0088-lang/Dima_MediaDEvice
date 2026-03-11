@@ -37,8 +37,8 @@ class Device(ABC):
         :param category: Новая категория.
         :return: None.
         """
-        if category.upper() in self.ALLOWED_CATEGORIES:
-            self._category = category
+        if category.title() in self.ALLOWED_CATEGORIES:
+            self._category = category.title()
         else:
             print(f'Категории: {category}. Нет в списке! ')
 
