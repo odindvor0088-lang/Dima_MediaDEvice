@@ -95,39 +95,39 @@ class Device(ABC):
 
     @property
     def specs(self) -> dict:
-        """Возвращает текущие характеристики."""
-        return self._specs
+        """Возвращает текущий словарь."""
+        return self._specs.copy()
 
     @specs.setter
-    def specs(self, specs: dict) -> None:
+    def specs(self, new_specs: dict) -> None:
         """
-            Принимает новое ревью модели и обрабатывает её.
-            :param review: Новое значение ревью.
+            Принимает словарь и обрабатывает его.
+            :param new_specs: Новое значение словаря.
             :return: None.
         """
-        self._specs = specs
+        if new_specs is None:
+            self._specs = {}
+        elif not isinstance(new_specs, dict):
+            print(f'Параметр specs должен быть словарем!')
+        else:
+            self._specs = new_specs
 
     @property
-    def review(self):
-        """Возвращает текущий обзор."""
+    def review(self) -> Review | None:
+        """Возвращает текущее ревью."""
         return self._review
 
     @review.setter
-    def review(self, review: Review) -> None:
+    def review(self, review: Review | None) -> None:
         """
             Принимает новое ревью модели и обрабатывает её.
             :param review: Новое значение ревью.
             :return: None.
         """
-        if not isinstance(review, Review):
-            print(f'должен быть review!')
+        if not isinstance(review, (Review, type(None))):
+           print(f'Ревью должно быть в классе Review или None!')
         else:
             self._review = review
-
-    @property
-    def specs(self):
-        """<UNK> <UNK> <UNK>."""
-        return self._specs
 
 
     def add_spec(self, key: str, value: str | int | float) -> None:
