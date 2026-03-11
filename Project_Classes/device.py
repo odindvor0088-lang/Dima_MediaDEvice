@@ -149,7 +149,7 @@ class Device(ABC):
         if key in self.specs:
             del self.specs[key]
         else:
-            print(f'ключ не найден!')
+            print(f'Ключ {key} не найден!')
 
 
 
