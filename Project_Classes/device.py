@@ -55,13 +55,11 @@ class Device(ABC):
         :return: None.
         """
         if year is None:
-            self._year = None
-        elif not isinstance(year, int):
-            print(f'Год модели {self.model} должен состоять из чисел!')
-        elif year < 1990:
-            print(f'Год модели {self.model} не может быть раньше 1990!')
-        elif year > datetime.now().year:
-            print(f'Год модели {self.model} не может быть позже {datetime.now().year}!')
+            self._year = datetime.now().year
+        elif not isinstance(year, (int, type(None))):
+            print(f'Год модели {self.model} должен состоять из чисел и не быть None!')
+        elif year < 1900 or year > datetime.now().year:
+            print(f'Недопустимое значение года модели!')
         else:
             self._year = year
 
