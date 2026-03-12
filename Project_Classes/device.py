@@ -5,13 +5,9 @@ from Project_Classes.review import Review
 
 class Device(ABC):
     """Класс для создания устройства"""
-
-    MIN_VOLUME = 0
-    MAX_VOLUME = 100
-    BATTERY_WARNING_LEVEL = 20
     ALLOWED_CATEGORIES = ["Смартфоны", "Наушники", "Ноутбуки", "Планшеты", "Умные часы"]
 
-    def __init__(self, brand: str, model: str, category: str,  year: int = None,  image: str = None) -> None:
+    def __init__(self, brand: str, model: str, category: str,  year: int = None,  image: str = None, specs: dict = None, review: Review = None) -> None:
         """
         Инициализация объекта Device
 
@@ -19,23 +15,22 @@ class Device(ABC):
          model: Модель устройства
          category: Категория устройства
          year: Год выпуска устройства
-         image: Разрешение устройстваЫ
+         image: Разрешение устройства
+         specs: Характеристики устройства
+         review: ревью устройства
         """
         self.brand = brand
         self.model = model
-        self.category = category    # присваиваем через свойство
-        self.year = year            # присваиваем через свойство
-        self.image = image          # присваиваем через свойство
-        self._specs = {}
-        self._review = None
-        self.battery_level = 100
-        self.current_volume = 50
-        self.is_on = False
+        self.category = category     # присваиваем через свойство
+        self.year = year             # присваиваем через свойство
+        self.image = image           # присваиваем через свойство
+        self.specs = specs           # присваиваем через свойство
+        self.review = review         # присваиваем через свойство
 
     @property
     def category(self) -> str:
         """Возвращает текущую категорию."""
-        return self.category
+        return self._category
 
     @category.setter
     def category(self, category: str) -> None:
@@ -44,10 +39,10 @@ class Device(ABC):
         :param category: Новая категория.
         :return: None.
         """
-        if category.title() not in self.ALLOWED_CATEGORIES:
-            print(f'Категории: {category}. Нет в списке! ')
+        if category.title() in self.ALLOWED_CATEGORIES:
+            self._category = category.title()
         else:
-            self.category = category
+            print(f'Категории: {category}. Нет в списке! ')
 
     @property
     def year(self) -> int:
@@ -55,165 +50,113 @@ class Device(ABC):
         return self._year
 
     @year.setter
-    def year(self, year: int) -> None:
+    def year(self, year: int | None) -> None:
         """
         Принимает новый год модели и обрабатывает её.
+        Если передано None, устанавливается текущий год.
         :param year: Новое значение годы.
         :return: None.
         """
         if year is None:
-            self._year = None
-        elif not isinstance(year, int):
-            print(f'Год модели {self.model} должен состоять из чисел!')
-        elif year < 1990:
-            print(f'Год модели {self.model} не может быть раньше 1990!')
-        elif year > datetime.now().year:
-            print(f'Год модели {self.model} не может быть позже {datetime.now().year}!')
+            self._year = datetime.now().year
+        elif not isinstance(year, (int, type(None))):
+            print(f'Год модели {self.model} должен состоять из чисел и не быть None!')
+        elif year < 1900 or year > datetime.now().year:
+            print(f'Недопустимое значение года модели!')
         else:
             self._year = year
 
 
     @property
-    def image(self) -> str:
+    def image(self) -> str | None:
         """Возвращает текущий экран модели."""
-        return self.image
+        return self._image
 
     @image.setter
-    def image(self, image: str) -> None:
+    def image(self, new_image: str) -> str | None:
         """
         Принимает новый экран модели и обрабатывает её.
-        :param image: Новое значение изображения.
-        :return: None.
+        Если передано None, то будет установлена картинка по умолчанию.
+        :param new_image: Новое значение изображения.
+        :return: Год устройства в виде числа.
         """
-        self.image = image
-
-    @property
-    def battery_level(self) -> int:
-        """Возвращает текущий заряд модели."""
-        return self._battery_level
-
-    @battery_level.setter
-    def battery_level(self, battery_level: int) -> None:
-        """
-        Принимает новый заряд модели и обрабатывает её.
-        :param battery_level: Новое значение заряда.
-        :return: None.
-        """
-        if not isinstance(battery_level, int):
-            print(f'Заряд модели должен состоять из чисел!')
-        elif battery_level < 0:
-            print(f'Заряд модели не может быть меньше 0!')
-        elif battery_level > 100:
-            print(f'Заряд модели не может быть больше 100!')
-        elif battery_level <= 20:
-            print(f'Предупреждение: низкий заряд')
-            self._battery_level = battery_level
+        if new_image is None:
+            self._image = '/'
+        elif not isinstance(new_image, (str, type(None))):
+            print(f'Значение экрана должно быть числом или None!')
         else:
-            self._battery_level = battery_level
-
-    @property
-    def current_volume(self) -> int:
-        """Возвращает текущую громкость модели."""
-        return self._current_volume
-
-    @current_volume.setter
-    def current_volume(self, current_volume: int) -> None:
-
-        if not isinstance(current_volume, int):
-            print(f'Громкость модели должен состоять из чисел!')
-        elif current_volume < self.MIN_VOLUME:
-            print(f'Громкость модели не может быть меньше 0!')
-        elif current_volume > self.MAX_VOLUME:
-            print(f'Громкость модели не может быть больше 100!')
-        else:
-            self._current_volume = current_volume
-
-    @property
-    def is_on(self) -> bool:
-        """Возвращает текущее состояние модели."""
-        return self._is_on
-
-    @is_on.setter
-    def is_on(self, is_on: bool) -> None:
-        """
-             Принимает новое состояние модели и проверяет ее.
-             :param is_on: Новое состояние модели.
-             :return: None.
-        """
-        if not isinstance(is_on, bool):
-            print(f'Состояние должно быть булевым значением (True/False)!')
-        elif self._is_on:
-            print("Устройство уже включено")
-        elif not self._is_on:
-            print("Устройство уже выключено")
-        else:
-            self._is_on = is_on
-
-    @abstractmethod
-    def play(self) -> None:
-        pass
-
-    @abstractmethod
-    def stop(self) -> None:
-        pass
+            self._image = new_image
 
     @abstractmethod
     def get_device_type(self) -> str:
-        #Возвращает текущую категория устройства
+        """Возвращает текущую категория устройства."""
+        pass
+
+    @abstractmethod
+    def get_short_description(self) -> str:
+        """Возвращает краткое описание устройства (для превью на сайте)."""
         pass
 
     @property
     def specs(self) -> dict:
-        """Возвращает текущие характеристики."""
-        return self.specs.copy()
+        """Возвращает текущий словарь."""
+        return self._specs.copy()
+
+    @specs.setter
+    def specs(self, new_specs: dict) -> None:
+        """
+            Принимает словарь и обрабатывает его.
+            :param new_specs: Новое значение словаря.
+            :return: None.
+        """
+        if new_specs is None:
+            self._specs = {}
+        elif not isinstance(new_specs, dict):
+            print(f'Параметр specs должен быть словарем!')
+        else:
+            self._specs = new_specs.copy()
 
     @property
-    def review(self):
-        """Возвращает текущий обзор."""
+    def review(self) -> Review | None:
+        """Возвращает текущее ревью."""
         return self._review
 
     @review.setter
-    def review(self, review: Review) -> None:
+    def review(self, review: Review | None) -> None:
         """
             Принимает новое ревью модели и обрабатывает её.
-            :param review: Новое значение уровня звука.
+            :param review: Новое значение ревью.
             :return: None.
         """
-        if not isinstance(review, Review):
-            print(f'review должно быть в классе Review!')
+        if not isinstance(review, (Review, type(None))):
+           print(f'Ревью должно быть в классе Review или None!')
         else:
             self._review = review
 
-# Создаем устройство
-phone = Device("Apple", "iPhone 13", "Смартфоны", 2021, "iphone.jpg")
 
-# Тест 1: Категория
-phone.category = "Смартфоны"
-phone.category = "Телефоны"
+    def add_spec(self, key: str, value: str | int | float) -> None:
+        """
+            Добавляет и обновляет характеристики в словаре spec.
+            Если ключ уже существует, то значение перезаписывается
+            :param key: Имя ключа.
+            :param value: Значение ключа.
+            :return: None.
+        """
+        self.specs[key] = value
 
-# Тест 2: Год
-phone.year = 1990
-phone.year = 1989
-phone.year = 2027
-phone.year = None
+    def remove_spec(self, key: str) -> None:
+        """
+            Удаляет характеристику по ключу из spec
+            :param key: Имя ключа.
+            :return: None.
+        """
+        if key in self.specs:
+            del self.specs[key]
+        else:
+            print(f'Ключ {key} не найден!')
 
-# Тест 3: Заряд батареи
-phone.battery_level = 20
-phone.battery_level = 19
-phone.battery_level = -1
-phone.battery_level = 101
 
-# Тест 4: Громкость
-phone.current_volume = 0
-phone.current_volume = 100
-phone.current_volume = -1
-phone.current_volume = 101
 
-# Тест 5: Состояние
-phone.is_on = True
-phone.is_on = True
-phone.is_on = False
-phone.is_on = False
 
 
 
