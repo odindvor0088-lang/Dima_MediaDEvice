@@ -15,7 +15,9 @@ class Device(ABC):
          model: Модель устройства
          category: Категория устройства
          year: Год выпуска устройства
-         image: Разрешение устройстваЫ
+         image: Разрешение устройства
+         specs: Характеристики устройства
+         review: ревью устройства
         """
         self.brand = brand
         self.model = model
@@ -48,9 +50,10 @@ class Device(ABC):
         return self._year
 
     @year.setter
-    def year(self, year: int) -> None:
+    def year(self, year: int | None) -> None:
         """
         Принимает новый год модели и обрабатывает её.
+        Если передано None, устанавливается текущий год.
         :param year: Новое значение годы.
         :return: None.
         """
@@ -75,7 +78,7 @@ class Device(ABC):
         Принимает новый экран модели и обрабатывает её.
         Если передано None, то будет установлена картинка по умолчанию.
         :param new_image: Новое значение изображения.
-        :return: str | None.
+        :return: Год устройства в виде числа.
         """
         if new_image is None:
             self._image = '/'
@@ -111,7 +114,7 @@ class Device(ABC):
         elif not isinstance(new_specs, dict):
             print(f'Параметр specs должен быть словарем!')
         else:
-            self._specs = new_specs
+            self._specs = new_specs.copy()
 
     @property
     def review(self) -> Review | None:
