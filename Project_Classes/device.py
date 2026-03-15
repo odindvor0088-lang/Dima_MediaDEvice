@@ -27,6 +27,9 @@ class Device(ABC):
         self.specs = specs           # присваиваем через свойство
         self.review = review         # присваиваем через свойство
 
+    def __repr__(self) -> str:
+        return f"Device(brand = {self.brand}, model = {self.model}, category = {self.category}, year = {self.year}, image = {self.image}, specs = {self.specs}, review = {self.review} )"
+
     @property
     def category(self) -> str:
         """Возвращает текущую категорию."""
