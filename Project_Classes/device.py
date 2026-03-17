@@ -28,6 +28,7 @@ class Device(ABC):
         self.review = review         # присваиваем через свойство
 
     def __repr__(self) -> str:
+        """Строковое представление объекта Device."""
         return f"Device(brand = {self.brand}, model = {self.model}, category = {self.category}, year = {self.year}, image = {self.image}, specs = {self.specs}, review = {self.review} )"
 
     @property
