@@ -159,6 +159,37 @@ class Device(ABC):
         else:
             print(f'Ключ {key} не найден!')
 
+    @classmethod
+    def from_dict(cls, data: dict) -> 'Device':
+        """
+        Метод обрабатывает словарь с характеристиками
+        Если в словаре недопустимый ключ, то код выдаст ошибку
+
+        :param data: СЛОВАРЬ С ХАРАКТЕРИСТИКАМИ МОДЕЛИ
+        :return: 'Device'
+        """
+        true_keys = ['brand', 'model', 'category']
+        optional_keys = ['year', 'image', 'specs', 'review']
+        for key in true_keys:
+            if key not in data:
+                print(f"неверный ключ '{key}'")
+
+        device = cls(
+            brand=data['brand'],
+            model=data['model'],
+            category=data['category'],
+            year=data.get('year'),
+            image=data.get('image'),
+            specs=data.get('specs'),
+            review=data.get('review')
+        )
+
+        return device
+
+
+
+
+
 
 
 
