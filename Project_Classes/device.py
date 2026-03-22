@@ -131,6 +131,16 @@ class Device(ABC):
         else:
             self._review = review
 
+    @abstractmethod
+    def get_device_type(self) -> str:
+        """Возвращает текущую категория устройства."""
+        pass
+
+    @abstractmethod
+    def get_short_description(self) -> str:
+        """Возвращает краткое описание устройства (для превью на сайте)."""
+        pass
+
 
     def add_spec(self, key: str, value: str | int | float) -> None:
         """
@@ -182,15 +192,3 @@ class Device(ABC):
             specs=data.get('specs'),
             review=review
         )
-
-
-data = {
-    "brand": "Honor",
-    "model": "7A",
-    "category": "Смартфоны",
-    "year": 2018,
-    "specs": {"Экран": "5.45", "Процессор": "Snapdragon 430"},
-    "review": {"title": "Отличный бюджетник", "content": "Текст...", "pros": ["Цена"], "cons": ["Камера"]}
-}
-phone = Device.from_dict(data)
-print(phone)
