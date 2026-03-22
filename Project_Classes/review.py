@@ -162,6 +162,32 @@ class Review:
         else:
             print(f'Индекс {index} вне диапазона')
 
+    @classmethod
+    def from_dict(cls, data: dict) -> Review | None:
+        """
+        Метод обрабатывает словарь с характеристиками
+        Если в словаре недопустимый ключ, то код выдаст ошибку
+
+        :param data: СЛОВАРЬ С ХАРАКТЕРИСТИКАМИ МОДЕЛИ
+        :return: 'Device'
+        """
+        true_keys = ['title', 'content']
+        for key in true_keys:
+            if key not in data:
+                print(f"неверный ключ '{key}'")
+                return None
+
+        review = cls(
+            title=data['title'],
+            content=data['content'],
+            author=data.get('author'),
+            date=data.get('date'),
+            pros=data.get('pros'),
+            cons=data.get('cons')
+        )
+
+        return review
+
 if __name__ == "__main__":
     # 1. ТЕСТ СОЗДАНИЯ ОБЗОРА
     phone_review = Review(
