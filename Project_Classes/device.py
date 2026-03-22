@@ -7,7 +7,8 @@ class Device(ABC):
     """Класс для создания устройства"""
     ALLOWED_CATEGORIES = ["Смартфоны", "Наушники", "Ноутбуки", "Планшеты", "Умные часы"]
 
-    def __init__(self, brand: str, model: str, category: str,  year: int = None,  image: str = None, specs: dict = None, review: Review = None) -> None:
+    def __init__(self, brand: str, model: str, category: str,  year: int = None,  image: str = None,
+                 specs: dict = None, review: Review = None) -> None:
         """
         Инициализация объекта Device
 
@@ -29,7 +30,8 @@ class Device(ABC):
 
     def __repr__(self) -> str:
         """Строковое представление объекта Device."""
-        return f"Device(brand = {self.brand}, model = {self.model}, category = {self.category}, year = {self.year}, image = {self.image}, specs = {self.specs}, review = {self.review} )"
+        return (f"Device(brand = {self.brand}, model = {self.model}, category = {self.category},"
+                f" year = {self.year}, image = {self.image}, specs = {self.specs}, review = {self.review} )")
 
     @property
     def category(self) -> str:
@@ -91,15 +93,7 @@ class Device(ABC):
         else:
             self._image = new_image
 
-    @abstractmethod
-    def get_device_type(self) -> str:
-        """Возвращает текущую категория устройства."""
-        pass
 
-    @abstractmethod
-    def get_short_description(self) -> str:
-        """Возвращает краткое описание устройства (для превью на сайте)."""
-        pass
 
     @property
     def specs(self) -> dict:
@@ -179,8 +173,7 @@ class Device(ABC):
         else:
             review = None
 
-
-        device = cls(
+        return cls(
             brand=data['brand'],
             model=data['model'],
             category=data['category'],
@@ -190,15 +183,14 @@ class Device(ABC):
             review=review
         )
 
-        return device
 
-
-
-
-
-
-
-
-
-
-
+data = {
+    "brand": "Honor",
+    "model": "7A",
+    "category": "Смартфоны",
+    "year": 2018,
+    "specs": {"Экран": "5.45", "Процессор": "Snapdragon 430"},
+    "review": {"title": "Отличный бюджетник", "content": "Текст...", "pros": ["Цена"], "cons": ["Камера"]}
+}
+phone = Device.from_dict(data)
+print(phone)

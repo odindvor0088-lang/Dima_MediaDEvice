@@ -67,7 +67,8 @@ class Review:
     @author.setter
     def author(self, value: str) -> None:
         """Сохраняет имя автора."""
-        self.__author = value
+        if isinstance(value, str):
+            self.__author = value
         print(f'Другие пользователи будут видеть вас под ником: {self.__author}')
 
     @property
@@ -177,16 +178,14 @@ class Review:
                 print(f"неверный ключ '{key}'")
                 return None
 
-        review = cls(
+        return cls(
             title=data['title'],
             content=data['content'],
-            author=data.get('author'),
+            author=data.get('author', 'Эксперт'),
             date=data.get('date'),
             pros=data.get('pros'),
             cons=data.get('cons')
         )
-
-        return review
 
 if __name__ == "__main__":
     # 1. ТЕСТ СОЗДАНИЯ ОБЗОРА
@@ -194,9 +193,6 @@ if __name__ == "__main__":
         title="Samsung Galaxy S24 Ultra",
         content="Флагманский телефон с отличной камерой и производительностью",
         author="ТехноБлогер",
-        date="2025-02-23",
-        pros=None,
-        cons=None
     )
 
     # 2. ТЕСТ ГЕТТЕРОВ (ЧТЕНИЕ)
