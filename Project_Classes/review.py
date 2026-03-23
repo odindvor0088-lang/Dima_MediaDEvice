@@ -25,6 +25,16 @@ class Review:
         self.pros = pros
         self.cons = cons
 
+    def __repr__(self) -> str:
+        """Строковое представление объекта Review."""
+        return (f"Review(title = {self.title!r}, content = {self.content!r}, author = {self.author!r},"
+                f" date = {self.date}, pros = {self.pros}, cons = {self.cons} )")
+
+    def __str__(self) -> str:
+        """Строковое представление объекта Review для пользователя."""
+        return (f"Создано ревью состоящее из: (title = {self.title}, content = {self.content}, author = {self.author},"
+                f" date = {self.date}, pros = {self.pros}, cons = {self.cons} )")
+
     @property
     def title(self) -> str:
         """Возвращает текущий заголовок обзора."""
