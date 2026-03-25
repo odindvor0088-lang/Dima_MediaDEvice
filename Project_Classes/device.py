@@ -30,8 +30,14 @@ class Device(ABC):
 
     def __repr__(self) -> str:
         """Строковое представление объекта Device."""
-        return (f"Device(brand = {self.brand}, model = {self.model}, category = {self.category},"
+        return (f"Device(brand = {self.brand!r}, model = {self.model!r}, category = {self.category!r},"
                 f" year = {self.year}, image = {self.image}, specs = {self.specs}, review = {self.review} )")
+
+    def __str__(self) -> str:
+        """Строковое представление объекта Device для пользователя."""
+        return (f"Создано устройство: (brand = {self.brand!r}, model = {self.model!r}, category = {self.category!r},"
+                f" year = {self.year}, image = {self.image}, specs = {self.specs}, review = {self.review} )")
+
 
     @property
     def category(self) -> str:
