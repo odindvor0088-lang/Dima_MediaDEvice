@@ -1,14 +1,20 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
 
-from Project_Classes.review import Review
+from src.review.review import Review
 
 class Device(ABC):
     """Класс для создания устройства"""
     ALLOWED_CATEGORIES = ["Смартфоны", "Наушники", "Ноутбуки", "Планшеты", "Умные часы"]
 
-    def __init__(self, brand: str, model: str, category: str,  year: int = None,  image: str = None,
-                 specs: dict = None, review: Review = None) -> None:
+    def __init__(self,
+                 brand: str,
+                 model: str,
+                 category: str,
+                 year: int = None,
+                 image: str = None,
+                 specs: dict = None,
+                 review: Review = None) -> None:
         """
         Инициализация объекта Device
 
