@@ -137,14 +137,14 @@ class Review:
     @property
     def status(self) -> ReviewStatus:
         """
-
+        Возвращает статус ревью.
         """
         return self.__status
 
     @status.setter
     def status(self, new_status: ReviewStatus | str) -> None:
         """
-
+        Проверяет статус и выдаёт сообщение если статус неправильный
         """
         if isinstance(new_status, ReviewStatus):
             self.__status = new_status
