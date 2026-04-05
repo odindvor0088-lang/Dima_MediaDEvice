@@ -1,12 +1,11 @@
 from datetime import datetime
 
 from src.review.status_review_enum import ReviewStatus
+from src.review.review_exception import *
 
 
 class Review:
-    """
-      Класс для представления обзора
-      """
+    """Класс для представления обзора"""
     def __init__(self, title: str, content: str, author: str = "Эксперт",
                  status: ReviewStatus = ReviewStatus.PUBLISHED,
                  date: datetime = None,
@@ -50,14 +49,20 @@ class Review:
     @title.setter
     def title(self, value: str) -> None:
         """
-            Принимает новый заголовок, проверяет его на то, чтобы он был строкой.
-            И выводит сообщение если заголовок неправильный.
+        Устанавливает заголовок.
+
+        :param value: Новый текст заголовка.
+        :raises TypeError: Если value не является строкой.
+        :raises EmptyReviewFieldError: Если value пустая строка или состоит только из пробелов.
+        :return: None.
         """
-        if isinstance(value, str):
+        if not isinstance(value, str):
+            raise TypeError(f"Заголовок должен быть str, получен {type(value).__name__}")
+
+        if value.strip():
             self.__title = value
-            print(f'Заголовок вашего обзора: {self.__title}')
         else:
-            print(f'Заголовок не может быть написан числами!')
+            raise EmptyReviewFieldError("title")
 
     @property
     def content(self) -> str:
@@ -67,8 +72,8 @@ class Review:
     @content.setter
     def content(self, value: str) -> None:
         """
-            Принимает новый текст обзора и проверяет его с помощью isinstanse.
-            И выводит сообщение если обзор неправильный.
+            Устанавливает новый текст обзора.
+            value:
         """
         if isinstance(value, str):
             self.__content = value
@@ -83,7 +88,7 @@ class Review:
 
     @author.setter
     def author(self, value: str) -> None:
-        """Сохраняет имя автора."""
+        """Устанавливает имя автора."""
         if isinstance(value, str):
             self.__author = value
         print(f'Другие пользователи будут видеть вас под ником: {self.__author}')
@@ -146,13 +151,11 @@ class Review:
         """
 
         """
-        if isinstance(new_status, ReviewStatus):
+        if new_status in ReviewStatus:
             self.__status = new_status
-        elif isinstance(new_status, str):
-            if new_status in ReviewStatus:
-                self.__status = new_status
-            else:
-                print(f"new_status must be str or ReviewStatus")
+        else:
+            print(f"new_status must be attribute in ReviewStatus!"
+                  f"ReviewStatus: {", ".join(ReviewStatus)}")
 
     def add_pro(self, pro_text: str) -> None:
         """

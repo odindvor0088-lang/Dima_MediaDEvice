@@ -2,11 +2,10 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 
 from src.review.review import Review
+from src.device.allowed_categories import AllowedCategories
 
 class Device(ABC):
     """Класс для создания устройства"""
-    ALLOWED_CATEGORIES = ["Смартфоны", "Наушники", "Ноутбуки", "Планшеты", "Умные часы"]
-
     def __init__(self,
                  brand: str,
                  model: str,

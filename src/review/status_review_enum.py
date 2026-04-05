@@ -1,8 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class ReviewStatus(Enum):
+class ReviewStatus(StrEnum):
     PUBLISHED = "PUBLISHED"
     DRAFT = "DRAFT"
     ARCHIVED = "ARCHIVED"
-
