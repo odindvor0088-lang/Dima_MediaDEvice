@@ -14,13 +14,20 @@ class Review:
         """
         Инициализация объекта Review.
 
-            title: Заголовок обзора
-            content: Текст обзора
-            author: Автор обзора (по умолчанию "Эксперт")
-            status: ...
-            date: Дата создания
-            pros: Список плюсов
-            cons: Список минусов
+        :param title: заголовок обзора
+        :type title: str
+        :param content: текст обзора
+        :type content: str
+        :param author: автор обзора; по умолчанию — «Эксперт»
+        :type author: str
+        :param status: статус обзора; по умолчанию — ReviewStatus.PUBLISHED
+        :type status: ReviewStatus
+        :param date: дата создания обзора; если None — устанавливается текущая дата и время
+        :type date: datetime | None
+        :param pros: список плюсов устройства; если None — инициализируется пустым списком
+        :type pros: list[str] | None
+        :param cons: список минусов устройства; если None — инициализируется пустым списком
+        :type cons: list[str] | None
         """
         # Используем property
         self.title = title
@@ -32,18 +39,33 @@ class Review:
         self.cons = cons
 
     def __repr__(self) -> str:
-        """Строковое представление объекта Review."""
+        """
+        Возвращает строковое представление объекта Review для отладки.
+
+        :return: строковое представление экземпляра класса
+        :rtype: str
+        """
         return (f"Review(title = {self.title!r}, content = {self.content!r}, author = {self.author!r},"
                 f" date = {self.date}, pros = {self.pros}, cons = {self.cons} )")
 
     def __str__(self) -> str:
-        """Строковое представление объекта Review для пользователя."""
+        """
+        Возвращает пользовательское строковое представление объекта Review.
+
+        :return: описание обзора для пользователя
+        :rtype: str
+        """
         return (f"Создано ревью состоящее из: (title = {self.title}, content = {self.content}, author = {self.author},"
                 f" date = {self.date}, pros = {self.pros}, cons = {self.cons} )")
 
     @property
     def title(self) -> str:
-        """Возвращает текущий заголовок обзора."""
+        """
+        Возвращает текущий заголовок обзора.
+
+        :return: заголовок обзора
+        :rtype: str
+        """
         return self.__title
 
     @title.setter
@@ -66,14 +88,22 @@ class Review:
 
     @property
     def content(self) -> str:
-        """Возвращает текст обзора."""
+        """
+        Возвращает текст обзора.
+
+        :return: текст обзора
+        :rtype: str
+        """
         return self.__content
 
     @content.setter
     def content(self, value: str) -> None:
         """
-            Устанавливает новый текст обзора.
-            value:
+         Устанавливает новый текст обзора.
+
+        :param value: новый текст обзора
+        :type value: str
+        :raises ValueError: если value не является строкой
         """
         if isinstance(value, str):
             self.__content = value
@@ -83,23 +113,47 @@ class Review:
 
     @property
     def author(self) -> str:
-        """Возвращает имя автора обзора."""
+        """
+        Возвращает имя автора обзора.
+
+        :return: имя автора
+        :rtype: str
+        """
         return self.__author
 
     @author.setter
     def author(self, value: str) -> None:
-        """Устанавливает имя автора."""
+        """
+        Устанавливает имя автора обзора.
+
+        :param value: новое имя автора
+        :type value: str
+        """
         if isinstance(value, str):
             self.__author = value
         print(f'Другие пользователи будут видеть вас под ником: {self.__author}')
 
     @property
     def date(self) -> datetime:
-        """Возвращает дату создания обзора."""
+        """
+        Возвращает дату создания обзора.
+
+        :return: дата и время создания обзора
+        :rtype: datetime
+        """
         return self.__date
 
     @date.setter
     def date(self, new_date: datetime) -> None:
+        """
+                Устанавливает дату создания обзора.
+
+                Если передано None, устанавливается текущая дата и время.
+
+                :param new_date: новая дата создания обзора
+                :type new_date: datetime | None
+                :raises ValueError: если new_date не является экземпляром datetime
+                """
         if new_date is None:
             self.__date = datetime.now()
         elif isinstance(new_date, datetime):
@@ -110,12 +164,25 @@ class Review:
 
     @property
     def pros(self) -> list[str]:
-        """Возвращает КОПИЮ списка"""
+        """
+        Возвращает копию списка плюсов обзора.
+
+        :return: копия списка плюсов
+        :rtype: list[str]
+        """
         return self.__pros.copy()
 
     @pros.setter
     def pros(self, list_pros: list[str]) -> None:
-        """Сохраняется копия списка для инкапсуляции."""
+        """
+        Устанавливает новый список плюсов обзора.
+
+        Если передан None, инициализируется пустой список. Сохраняется копия списка для инкапсуляции.
+
+        :param list_pros: новый список плюсов
+        :type list_pros: list[str] | None
+        :raises ValueError: если list_pros не является списком
+        ."""
         if list_pros is None:
             self.__pros = []
         elif isinstance(list_pros, list):
@@ -126,12 +193,25 @@ class Review:
 
     @property
     def cons(self) -> list:
-        """Сохраняется копия списка для инкапсуляции."""
+        """
+        Возвращает копию списка минусов обзора.
+
+        :return: копия списка минусов
+        :rtype: list[str]
+        """
         return self.__cons.copy()
 
     @cons.setter
     def cons(self, list_cons: list) -> None:
-        """Сохраняется копия списка для инкапсуляции."""
+        """
+        Устанавливает новый список минусов обзора.
+
+        Если передан None, инициализируется пустой список. Сохраняется копия списка для инкапсуляции.
+
+        :param list_cons: новый список минусов
+        :type list_cons: list[str] | None
+        :raises ValueError: если list_cons не является списком
+        """
         if list_cons is None:
             self.__cons = []
         elif isinstance(list_cons, list):
@@ -142,20 +222,26 @@ class Review:
     @property
     def status(self) -> ReviewStatus:
         """
+        Возвращает статус обзора.
 
+        :return: статус обзора
+        :rtype: ReviewStatus
         """
         return self.__status
 
     @status.setter
     def status(self, new_status: ReviewStatus | str) -> None:
         """
+        Устанавливает новый статус обзора.
 
+        :param new_status: новый статус обзора
+        :type new_status: ReviewStatus | str
+        :raises ValueError: если new_status не является допустимым статусом из ReviewStatus
         """
         if new_status in ReviewStatus:
             self.__status = new_status
         else:
-            print(f"new_status must be attribute in ReviewStatus!"
-                  f"ReviewStatus: {", ".join(ReviewStatus)}")
+            print(f"new_status must be attribute in ReviewStatus!")
 
     def add_pro(self, pro_text: str) -> None:
         """
@@ -188,7 +274,10 @@ class Review:
             print(f'Ваш минус добавлен✅')
 
     def remove_pro(self, index: int) -> None:
-        """Удаляет плюс по индексу."""
+        """
+        Удаляет плюс по индексу.
+        :param index: индекс плюса
+         """
         if -len(self.__pros) <= index < len(self.__pros):
             removed = self.__pros.pop(index)
             print(f"Плюс '{removed}' удалён")
@@ -196,7 +285,10 @@ class Review:
             print(f'Индекс {index} вне диапазона')
 
     def remove_con(self, index: int) -> None:
-        """Удаляет минус по индексу."""
+        """
+        Удаляет минус по индексу.
+        :param index: индекс минуса
+        """
         if -len(self.__cons) <= index < len(self.__cons):
             removed = self.__cons.pop(index)
             print(f"Минус '{removed}' удалён")
