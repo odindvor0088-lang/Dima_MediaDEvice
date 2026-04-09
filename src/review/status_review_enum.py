@@ -12,3 +12,9 @@ class ReviewStatus(StrEnum):
     PUBLISHED = "PUBLISHED"
     DRAFT = "DRAFT"
     ARCHIVED = "ARCHIVED"
+
+    @staticmethod
+    def to_list() -> list[str]:
+        # TODO: РЕАЛИЗОВАТЬ ДОКУМЕНТАЦИЮ!!!
+        return [str(i) for i in ReviewStatus]
+

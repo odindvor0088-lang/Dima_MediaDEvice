@@ -6,7 +6,10 @@ from src.review.review_exception import *
 
 class Review:
     """Класс для представления обзора"""
-    def __init__(self, title: str, content: str, author: str = "Эксперт",
+    def __init__(self,
+                 title: str,
+                 content: str,
+                 author: str = "Эксперт",
                  status: ReviewStatus = ReviewStatus.PUBLISHED,
                  date: datetime = None,
                  pros: list[str] = None,
@@ -15,19 +18,13 @@ class Review:
         Инициализация объекта Review.
 
         :param title: заголовок обзора
-        :type title: str
         :param content: текст обзора
-        :type content: str
         :param author: автор обзора; по умолчанию — «Эксперт»
-        :type author: str
         :param status: статус обзора; по умолчанию — ReviewStatus.PUBLISHED
         :type status: ReviewStatus
         :param date: дата создания обзора; если None — устанавливается текущая дата и время
-        :type date: datetime | None
         :param pros: список плюсов устройства; если None — инициализируется пустым списком
-        :type pros: list[str] | None
         :param cons: список минусов устройства; если None — инициализируется пустым списком
-        :type cons: list[str] | None
         """
         # Используем property
         self.title = title
@@ -42,8 +39,7 @@ class Review:
         """
         Возвращает строковое представление объекта Review для отладки.
 
-        :return: строковое представление экземпляра класса
-        :rtype: str
+        :return: Строковое представление экземпляра класса.
         """
         return (f"Review(title = {self.title!r}, content = {self.content!r}, author = {self.author!r},"
                 f" date = {self.date}, pros = {self.pros}, cons = {self.cons} )")
@@ -52,8 +48,7 @@ class Review:
         """
         Возвращает пользовательское строковое представление объекта Review.
 
-        :return: описание обзора для пользователя
-        :rtype: str
+        :return: Описание обзора для пользователя.
         """
         return (f"Создано ревью состоящее из: (title = {self.title}, content = {self.content}, author = {self.author},"
                 f" date = {self.date}, pros = {self.pros}, cons = {self.cons} )")
@@ -63,8 +58,7 @@ class Review:
         """
         Возвращает текущий заголовок обзора.
 
-        :return: заголовок обзора
-        :rtype: str
+        :return: Заголовок обзора.
         """
         return self.__title
 
@@ -91,33 +85,29 @@ class Review:
         """
         Возвращает текст обзора.
 
-        :return: текст обзора
-        :rtype: str
+        :return: Текст обзора.
         """
         return self.__content
 
     @content.setter
     def content(self, value: str) -> None:
         """
-         Устанавливает новый текст обзора.
+        Устанавливает новый текст обзора.
 
-        :param value: новый текст обзора
-        :type value: str
-        :raises ValueError: если value не является строкой
+        :param value: Новый текст обзора.
+        :raises ValueError: Если value не является строкой.
         """
         if isinstance(value, str):
             self.__content = value
-            print(f'Текст вашего обзора(Проверьте, всё ли вы правильно указали.): {self.__content}')
         else:
-            print(f'Обзор не может состоять только из чисел!')
+            raise ValueError(f'value должен быть str!')
 
     @property
     def author(self) -> str:
         """
         Возвращает имя автора обзора.
 
-        :return: имя автора
-        :rtype: str
+        :return: Имя автора.
         """
         return self.__author
 
@@ -126,40 +116,38 @@ class Review:
         """
         Устанавливает имя автора обзора.
 
-        :param value: новое имя автора
-        :type value: str
+        :param value: Новое имя автора.
+        :raises ValueError: Если value не является строкой.
         """
         if isinstance(value, str):
             self.__author = value
-        print(f'Другие пользователи будут видеть вас под ником: {self.__author}')
+        else:
+            raise TypeError(f'value должен быть str!')
 
     @property
     def date(self) -> datetime:
         """
         Возвращает дату создания обзора.
 
-        :return: дата и время создания обзора
-        :rtype: datetime
+        :return: Дата и время создания обзора.
         """
         return self.__date
 
     @date.setter
-    def date(self, new_date: datetime) -> None:
+    def date(self, new_date: datetime | None) -> None:
         """
-                Устанавливает дату создания обзора.
+        Устанавливает дату создания обзора.
+        Если передано None, устанавливается текущая дата и время.
 
-                Если передано None, устанавливается текущая дата и время.
-
-                :param new_date: новая дата создания обзора
-                :type new_date: datetime | None
-                :raises ValueError: если new_date не является экземпляром datetime
-                """
+        :param new_date: Новая дата создания обзора.
+        :raises ValueError: Если new_date не является экземпляром datetime.
+        """
         if new_date is None:
             self.__date = datetime.now()
         elif isinstance(new_date, datetime):
             self.__date = new_date
         else:
-            print(f'new_date должна быть экземпляром класса datetime!')
+            raise ValueError('new_date должна быть экземпляром класса datetime!')
 
 
     @property
@@ -167,28 +155,26 @@ class Review:
         """
         Возвращает копию списка плюсов обзора.
 
-        :return: копия списка плюсов
-        :rtype: list[str]
+        :return: Копия списка плюсов.
         """
         return self.__pros.copy()
 
     @pros.setter
-    def pros(self, list_pros: list[str]) -> None:
+    def pros(self, list_pros: list[str] | None) -> None:
         """
         Устанавливает новый список плюсов обзора.
-
-        Если передан None, инициализируется пустой список. Сохраняется копия списка для инкапсуляции.
+        Если передан None, инициализируется пустой список.
+        Сохраняется копия списка для инкапсуляции.
 
         :param list_pros: новый список плюсов
-        :type list_pros: list[str] | None
         :raises ValueError: если list_pros не является списком
-        ."""
+        """
         if list_pros is None:
             self.__pros = []
         elif isinstance(list_pros, list):
             self.__pros = list_pros.copy()
         else:
-            print(f'list_pros должен быть списком строк!')
+            raise ValueError('list_pros не является списком!')
 
 
     @property
@@ -196,8 +182,7 @@ class Review:
         """
         Возвращает копию списка минусов обзора.
 
-        :return: копия списка минусов
-        :rtype: list[str]
+        :return: Копия списка минусов.
         """
         return self.__cons.copy()
 
@@ -205,27 +190,25 @@ class Review:
     def cons(self, list_cons: list) -> None:
         """
         Устанавливает новый список минусов обзора.
+        Если передан None, инициализируется пустой список.
+        Сохраняется копия списка для инкапсуляции.
 
-        Если передан None, инициализируется пустой список. Сохраняется копия списка для инкапсуляции.
-
-        :param list_cons: новый список минусов
-        :type list_cons: list[str] | None
-        :raises ValueError: если list_cons не является списком
+        :param list_cons: Новый список минусов.
+        :raises ValueError: Если list_cons не является списком.
         """
         if list_cons is None:
             self.__cons = []
         elif isinstance(list_cons, list):
             self.__cons = list_cons.copy()
         else:
-            print(f'list_cons должен быть списком строк!')
+            raise ValueError('list_cons не является списком!')
 
     @property
     def status(self) -> ReviewStatus:
         """
         Возвращает статус обзора.
 
-        :return: статус обзора
-        :rtype: ReviewStatus
+        :return: Статус обзора.
         """
         return self.__status
 
@@ -234,66 +217,55 @@ class Review:
         """
         Устанавливает новый статус обзора.
 
-        :param new_status: новый статус обзора
-        :type new_status: ReviewStatus | str
-        :raises ValueError: если new_status не является допустимым статусом из ReviewStatus
+        :param new_status: Новый статус обзора.
+        :raises InvalidReviewStatusError: Если new_status не является
+                допустимым статусом из ReviewStatus.
         """
         if new_status in ReviewStatus:
             self.__status = new_status
         else:
-            print(f"new_status must be attribute in ReviewStatus!")
+            raise InvalidReviewStatusError(ReviewStatus.to_list(), new_status)
 
-    def add_pro(self, pro_text: str) -> None:
+    def add_pro(self, pro_text: str, max_length: int = 200) -> None:
         """
         Добавляет новый плюс в список.
-        :param pro_text: текст плюса
+        :param pro_text: Текст плюса.
+        :param max_length: Максимальная длина поля.
         """
-        if not isinstance(pro_text, str):
-            print(f'Плюс должен быть строкой!')
-        elif not pro_text.strip():
-            print(f'Плюс не может быть пустой строкой!')
-        elif len(pro_text) > 200:
-            print(f'Текст плюса слишком длинный')
-        else:
-            self.__pros.append(pro_text)
-            print(f'Ваш плюс добавлен✅')
+        self._validate_text(pro_text, "pro_text", max_length)
+        self.__pros.append(pro_text)
 
-    def add_con(self, con_text: str) -> None:
+
+    def add_con(self, con_text: str, max_length: int = 200) -> None:
         """
         Добавляет новый минус в список.
-        :param con_text: текст минуса
+        :param con_text: Текст минуса.
+        :param max_length: Максимальная длина поля.
         """
-        if not isinstance(con_text, str):
-            print(f'Минус должен быть строкой!')
-        elif not con_text.strip():
-            print(f'Минус не может быть пустой строкой!')
-        elif len(con_text) > 200:
-            print(f'Текст минуса слишком длинный')
-        else:
-            self.__pros.append(con_text)
-            print(f'Ваш минус добавлен✅')
+        self._validate_text(con_text, "con_text", max_length)
+        self.__pros.append(con_text)
 
     def remove_pro(self, index: int) -> None:
         """
         Удаляет плюс по индексу.
         :param index: индекс плюса
          """
-        if -len(self.__pros) <= index < len(self.__pros):
-            removed = self.__pros.pop(index)
-            print(f"Плюс '{removed}' удалён")
-        else:
-            print(f'Индекс {index} вне диапазона')
+        try:
+            del self.pros[index]
+        except IndexError as ex:
+            raise IndexError(f"Индекс {index} выходит за переделы списка. "
+                             f"Размер: {len(self.pros)}.") from ex
 
     def remove_con(self, index: int) -> None:
         """
         Удаляет минус по индексу.
         :param index: индекс минуса
         """
-        if -len(self.__cons) <= index < len(self.__cons):
-            removed = self.__cons.pop(index)
-            print(f"Минус '{removed}' удалён")
-        else:
-            print(f'Индекс {index} вне диапазона')
+        try:
+            del self.cons[index]
+        except IndexError as ex:
+            raise IndexError(f"Индекс {index} выходит за переделы списка. "
+                             f"Размер: {len(self.cons)}.") from ex
 
     @classmethod
     def from_dict(cls, data: dict) -> Review | None:
@@ -307,8 +279,7 @@ class Review:
         true_keys = ['title', 'content']
         for key in true_keys:
             if key not in data:
-                print(f"неверный ключ '{key}'")
-                return None
+                raise MissingRequiredFieldReviewError(key)
 
         return cls(
             title=data['title'],
@@ -319,4 +290,15 @@ class Review:
             cons=data.get('cons')
         )
 
+    @staticmethod
+    def _validate_text(text: str, field_name: str, max_length: int):
+        # TODO: РАСПИСАТЬ ДОКУМЕНТАЦИЮ!
+        if not isinstance(text, str):
+            raise ValueError(f'{field_name.capitalize()} должен быть str, получен '
+                             f'{type(text).__name__}!')
 
+        if not text.strip():
+            raise EmptyReviewFieldError(field_name)
+
+        if len(text) > max_length:
+            raise ReviewTextTooLongError(field_name, len(text), max_length)
