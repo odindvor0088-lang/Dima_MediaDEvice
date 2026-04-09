@@ -15,15 +15,22 @@ class Device(ABC):
                  specs: dict = None,
                  review: Review = None) -> None:
         """
-        Инициализация объекта Device
+        Инициализирует объект Device.
 
-         brand: Брэнд устройства
-         model: Модель устройства
-         category: Категория устройства
-         year: Год выпуска устройства
-         image: Разрешение устройства
-         specs: Характеристики устройства
-         review: ревью устройства
+        :param brand: бренд устройства
+        :type brand: str
+        :param model: модель устройства
+        :type model: str
+        :param category: категория устройства
+        :type category: str
+        :param year: год выпуска устройства; если None — устанавливается текущий год
+        :type year: int | None
+        :param image: путь или ссылка на изображение устройства; если None — используется значение по умолчанию
+        :type image: str | None
+        :param specs: словарь с техническими характеристиками
+        :type specs: dict | None
+        :param review: объект отзыва на устройство
+        :type review: Review | None
         """
         self.brand = brand
         self.model = model
@@ -34,27 +41,47 @@ class Device(ABC):
         self.review = review         # присваиваем через свойство
 
     def __repr__(self) -> str:
-        """Строковое представление объекта Device."""
+        """
+        Возвращает строковое представление объекта Device для отладки.
+
+        :return: строковое представление экземпляра класса
+        :rtype: str
+        """
         return (f"Device(brand = {self.brand!r}, model = {self.model!r}, category = {self.category!r},"
                 f" year = {self.year}, image = {self.image}, specs = {self.specs}, review = {self.review} )")
 
     def __str__(self) -> str:
-        """Строковое представление объекта Device для пользователя."""
+        """
+        Возвращает пользовательское строковое представление объекта Device.
+
+        :return: описание устройства для пользователя
+        :rtype: str
+        """
         return (f"Создано устройство: (brand = {self.brand!r}, model = {self.model!r}, category = {self.category!r},"
                 f" year = {self.year}, image = {self.image}, specs = {self.specs}, review = {self.review} )")
 
 
     @property
     def category(self) -> str:
-        """Возвращает текущую категорию."""
+        """
+        Возвращает текущую категорию устройства.
+
+        :return: категория устройства в формате с заглавной буквы
+        :rtype: str
+        """
         return self._category
 
     @category.setter
     def category(self, category: str) -> None:
         """
-        Принимает новую категорию и обрабатывает её.
-        :param category: Новая категория.
-        :return: None.
+        Устанавливает новую категорию устройства.
+
+        Проверяет, что категория есть в списке разрешённых (ALLOWED_CATEGORIES).
+        Если категория не найдена, выводится сообщение об ошибке.
+
+        :param category: новая категория устройства
+        :type category: str
+        :raises: сообщение об ошибке, если категория не разрешена
         """
         if category.title() in self.ALLOWED_CATEGORIES:
             self._category = category.title()
@@ -63,7 +90,12 @@ class Device(ABC):
 
     @property
     def year(self) -> int:
-        """Возвращает текущий год модели."""
+        """
+        Возвращает год выпуска устройства.
+
+        :return: год выпуска
+        :rtype: int
+        """
         return self._year
 
     @year.setter
@@ -86,7 +118,12 @@ class Device(ABC):
 
     @property
     def image(self) -> str | None:
-        """Возвращает текущий экран модели."""
+        """
+        Возвращает путь/ссылку на изображение устройства.
+
+        :return: путь или ссылка на изображение
+        :rtype: str | None
+        """
         return self._image
 
     @image.setter
@@ -108,7 +145,12 @@ class Device(ABC):
 
     @property
     def specs(self) -> dict:
-        """Возвращает текущий словарь."""
+        """
+        Возвращает копию словаря с техническими характеристиками.
+
+        :return: копия словаря specs
+        :rtype: dict
+        """
         return self._specs.copy()
 
     @specs.setter
@@ -127,7 +169,12 @@ class Device(ABC):
 
     @property
     def review(self) -> Review | None:
-        """Возвращает текущее ревью."""
+        """
+        Возвращает объект отзыва на устройство.
+
+        :return: объект Review или None
+        :rtype: Review | None
+        """
         return self._review
 
     @review.setter
@@ -144,12 +191,26 @@ class Device(ABC):
 
     @abstractmethod
     def get_device_type(self) -> str:
-        """Возвращает текущую категория устройства."""
+        """
+        Абстрактный метод. Возвращает тип устройства.
+
+        Должен быть реализован в дочерних классах.
+
+        :return: тип устройства
+        :rtype: str
+        """
         pass
 
     @abstractmethod
     def get_short_description(self) -> str:
-        """Возвращает краткое описание устройства (для превью на сайте)."""
+        """
+        Абстрактный метод. Возвращает краткое описание устройства для превью на сайте.
+
+        Должен быть реализован в дочерних классах.
+
+        :return: краткое описание устройства
+        :rtype: str
+        """
         pass
 
 
