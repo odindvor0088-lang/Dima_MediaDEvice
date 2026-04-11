@@ -222,7 +222,7 @@ class Review:
                 допустимым статусом из ReviewStatus.
         """
         if new_status in ReviewStatus:
-            self.__status = new_status
+            self.__status = new_status    # TODO: ОШИБКА РАЗОБРАТЬ НА ЗАНЯТИИ
         else:
             raise InvalidReviewStatusError(ReviewStatus.to_list(), new_status)
 
