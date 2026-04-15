@@ -42,8 +42,7 @@ class FalseYear(Exception):
 
         super().__init__(
             f"Недопустимая дата: {self.year}."
-            f"Минимально возможный год: {self.min_year}"
-            f"Дата не может быть больше: {self.year_now}"
+            f"Год должен быть в диапазоне между {self.min_year} и {self.year_now}"
         )
 
 class NotReviewInClassReview(Exception):
@@ -61,7 +60,7 @@ class NotReviewInClassReview(Exception):
         self.review = review
 
         super().__init__(
-            f"Недопустимое ревью(ревью должно быть в классе Review): {self.review}."
+            f"Недопустимое ревью(должен быть экземпляром класса Review): {self.review}."
         )
 
 class NotKeyInSpec(Exception):

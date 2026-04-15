@@ -66,7 +66,7 @@ class InvalidReviewStatusError(ReviewError):
         self.allowed = allowed
         self.cur_status = cur_status
         super().__init__(
-            f"Недопустимая категория: {self.cur_status}."
+            f"Недопустимый статус: {self.cur_status}."
             f"Допустимые статусы: {", ".join(self.allowed)}."
         )
 

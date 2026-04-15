@@ -71,7 +71,7 @@ class Device(ABC):
         Если категория не найдена, выводится сообщение об ошибке.
 
         :param category: Новая категория устройства.
-        :raises: Сообщение об ошибке, если категория не разрешена.
+        :raises NotCategoryInList: Возникает если категория не разрешена.
         """
         if category.title() in self.ALLOWED_CATEGORIES:
             self._category = category.title()
@@ -93,6 +93,7 @@ class Device(ABC):
         Принимает новый год модели и обрабатывает её.
         Если передано None, устанавливается текущий год.
         :param year: Новое значение годы.
+        :raises FalseYear: Возникает если введена некорректная дата.
         """
         if year is None:
             self._year = datetime.now().year
@@ -121,6 +122,7 @@ class Device(ABC):
         Принимает новый экран модели и обрабатывает её.
         Если передано None, то будет установлена картинка по умолчанию.
         :param new_image: Новое значение изображения.
+        :raises ValueError: Если new_image не str.
         """
         if new_image is None:
             self._image = '/'
@@ -146,6 +148,7 @@ class Device(ABC):
         """
             Принимает словарь и обрабатывает его.
             :param new_specs: Новое значение словаря.
+            :raises ValueError: Если new_specs не словарь.
         """
         if new_specs is None:
             self._specs = {}
@@ -169,6 +172,7 @@ class Device(ABC):
         """
             Принимает новое ревью модели и обрабатывает её.
             :param review: Новое значение ревью.
+            :raises NotReviewInClassReview: Если review не экземпляр класса Review.
         """
         if not isinstance(review, (Review, type(None))):
            raise NotReviewInClassReview(review)
@@ -205,6 +209,7 @@ class Device(ABC):
         """
             Удаляет характеристику по ключу из spec
             :param key: Имя ключа.
+            :raises NotKeyInSpec: Если key это несуществующий ключ.
         """
         if key in self.specs:
             del self.specs[key]
