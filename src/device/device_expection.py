@@ -2,24 +2,25 @@ class DeviceError(Exception):
     """Базовое исключение для всех ошибок связанных с классов Device."""
 
 class NotCategoryInList(DeviceError):
-    from src.device.allowed_categories import AllowedCategories
     """
     Возникает при попытке установить неверную категорию.
     
     :param category: Неверное значение категории.
     """
-    def __init__(self, category: str):
+    def __init__(self, category: str, allow_list: list[str]):
         """
         Инициализирует исключение с указанием неверной категории.
 
         :param category: Неверное значение категории.
         """
         self.category = category
+        self.allow_list = allow_list
 
         super().__init__(
             f"Недопустимый статус: {self.category}."
-            f"Допустимые статусы: {[x for x in self.AllowedCategories]}"
+            f"Допустимые статусы: {", ".join(self.allow_list)}."
         )
+
 class FalseYear(Exception):
     """
     Возникает при попытке установить неверную категорию.

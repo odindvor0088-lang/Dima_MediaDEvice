@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from src.review.status_review import ReviewStatus
-from src.review.review_exception import *
+from src.review.review_exception import * # TODO: ИСПРАВИТЬ НА ПРЯМОЙ ИМПОРТ
 
 
 class Review:
@@ -221,10 +221,10 @@ class Review:
         :raises InvalidReviewStatusError: Если new_status не является
                 допустимым статусом из ReviewStatus.
         """
-        if new_status in ReviewStatus:
-            self.__status = new_status    # TODO: ОШИБКА РАЗОБРАТЬ НА ЗАНЯТИИ
-        else:
-            raise InvalidReviewStatusError(ReviewStatus.to_list(), new_status)
+        try:
+            self.__status = ReviewStatus(new_status)
+        except ValueError as ex:
+            raise InvalidReviewStatusError(ReviewStatus.to_list(), new_status) from ex
 
     def add_pro(self, pro_text: str, max_length: int = 200) -> None:
         """

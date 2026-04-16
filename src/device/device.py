@@ -3,14 +3,14 @@ from datetime import datetime
 
 from src.review.review import Review
 from src.device.allowed_categories import AllowedCategories
-from src.device.device_expection import *
+from src.device.device_expection import * # TODO: ИСПРАВИТЬ НА ПРЯМОЙ ИМПОРТ
 
 class Device(ABC):
     """Класс для создания устройства"""
     def __init__(self,
                  brand: str,
                  model: str,
-                 category: str,
+                 category: AllowedCategories,
                  year: int = None,
                  image: str = None,
                  specs: dict = None,
@@ -20,7 +20,7 @@ class Device(ABC):
 
         :param brand: Бренд устройства.
         :param model: Модель устройства.
-        :param category: Категория устройства
+        :param category: Категория устройства.
         :param year: Год выпуска устройства; если None — устанавливается текущий год.
         :param image: Путь или ссылка на изображение устройства; если None — используется значение по умолчанию.
         :param specs: Словарь с техническими характеристиками.
@@ -54,7 +54,7 @@ class Device(ABC):
 
 
     @property
-    def category(self) -> str:
+    def category(self) -> AllowedCategories:
         """
         Возвращает текущую категорию устройства.
 
