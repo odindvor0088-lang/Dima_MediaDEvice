@@ -3,6 +3,7 @@ from datetime import datetime
 
 from src.review.review import Review
 from src.device.allowed_categories import AllowedCategories
+from src.device.device_expection import *
 
 class Device(ABC):
     """Класс для создания устройства"""
@@ -17,20 +18,13 @@ class Device(ABC):
         """
         Инициализирует объект Device.
 
-        :param brand: бренд устройства
-        :type brand: str
-        :param model: модель устройства
-        :type model: str
-        :param category: категория устройства
-        :type category: str
-        :param year: год выпуска устройства; если None — устанавливается текущий год
-        :type year: int | None
-        :param image: путь или ссылка на изображение устройства; если None — используется значение по умолчанию
-        :type image: str | None
-        :param specs: словарь с техническими характеристиками
-        :type specs: dict | None
-        :param review: объект отзыва на устройство
-        :type review: Review | None
+        :param brand: Бренд устройства.
+        :param model: Модель устройства.
+        :param category: Категория устройства
+        :param year: Год выпуска устройства; если None — устанавливается текущий год.
+        :param image: Путь или ссылка на изображение устройства; если None — используется значение по умолчанию.
+        :param specs: Словарь с техническими характеристиками.
+        :param review: Объект отзыва на устройство.
         """
         self.brand = brand
         self.model = model
@@ -44,8 +38,7 @@ class Device(ABC):
         """
         Возвращает строковое представление объекта Device для отладки.
 
-        :return: строковое представление экземпляра класса
-        :rtype: str
+        :return: Строковое представление экземпляра класса.
         """
         return (f"Device(brand = {self.brand!r}, model = {self.model!r}, category = {self.category!r},"
                 f" year = {self.year}, image = {self.image}, specs = {self.specs}, review = {self.review} )")
@@ -54,8 +47,7 @@ class Device(ABC):
         """
         Возвращает пользовательское строковое представление объекта Device.
 
-        :return: описание устройства для пользователя
-        :rtype: str
+        :return: Описание устройства для пользователя.
         """
         return (f"Создано устройство: (brand = {self.brand!r}, model = {self.model!r}, category = {self.category!r},"
                 f" year = {self.year}, image = {self.image}, specs = {self.specs}, review = {self.review} )")
@@ -66,8 +58,7 @@ class Device(ABC):
         """
         Возвращает текущую категорию устройства.
 
-        :return: категория устройства в формате с заглавной буквы
-        :rtype: str
+        :return: Категория устройства в формате с заглавной буквы.
         """
         return self._category
 
@@ -79,22 +70,20 @@ class Device(ABC):
         Проверяет, что категория есть в списке разрешённых (ALLOWED_CATEGORIES).
         Если категория не найдена, выводится сообщение об ошибке.
 
-        :param category: новая категория устройства
-        :type category: str
-        :raises: сообщение об ошибке, если категория не разрешена
+        :param category: Новая категория устройства.
+        :raises NotCategoryInList: Возникает если категория не разрешена.
         """
         if category.title() in self.ALLOWED_CATEGORIES:
             self._category = category.title()
         else:
-            print(f'Категории: {category}. Нет в списке! ')
+            raise NotCategoryInList(category)
 
     @property
     def year(self) -> int:
         """
         Возвращает год выпуска устройства.
 
-        :return: год выпуска
-        :rtype: int
+        :return: Год выпуска.
         """
         return self._year
 
@@ -104,14 +93,16 @@ class Device(ABC):
         Принимает новый год модели и обрабатывает её.
         Если передано None, устанавливается текущий год.
         :param year: Новое значение годы.
-        :return: None.
+        :raises FalseYear: Возникает если введена некорректная дата.
         """
         if year is None:
             self._year = datetime.now().year
-        elif not isinstance(year, (int, type(None))):
-            print(f'Год модели {self.model} должен состоять из чисел и не быть None!')
-        elif year < 1900 or year > datetime.now().year:
-            print(f'Недопустимое значение года модели!')
+
+        if not isinstance(year, (int, type(None))):
+            raise ValueError('year должен быть int(None)')
+
+        if year < 1900 or year > datetime.now().year:
+            raise FalseYear(year, 1900, datetime.now().year)
         else:
             self._year = year
 
@@ -121,8 +112,7 @@ class Device(ABC):
         """
         Возвращает путь/ссылку на изображение устройства.
 
-        :return: путь или ссылка на изображение
-        :rtype: str | None
+        :return: Путь или ссылка на изображение.
         """
         return self._image
 
@@ -132,12 +122,13 @@ class Device(ABC):
         Принимает новый экран модели и обрабатывает её.
         Если передано None, то будет установлена картинка по умолчанию.
         :param new_image: Новое значение изображения.
-        :return: Год устройства в виде числа.
+        :raises ValueError: Если new_image не str.
         """
         if new_image is None:
             self._image = '/'
-        elif not isinstance(new_image, (str, type(None))):
-            print(f'Значение экрана должно быть числом или None!')
+
+        if not isinstance(new_image, (str, type(None))):
+            raise ValueError('new_image должен быть str')
         else:
             self._image = new_image
 
@@ -148,8 +139,7 @@ class Device(ABC):
         """
         Возвращает копию словаря с техническими характеристиками.
 
-        :return: копия словаря specs
-        :rtype: dict
+        :return: Копия словаря specs.
         """
         return self._specs.copy()
 
@@ -158,12 +148,13 @@ class Device(ABC):
         """
             Принимает словарь и обрабатывает его.
             :param new_specs: Новое значение словаря.
-            :return: None.
+            :raises ValueError: Если new_specs не словарь.
         """
         if new_specs is None:
             self._specs = {}
-        elif not isinstance(new_specs, dict):
-            print(f'Параметр specs должен быть словарем!')
+
+        if not isinstance(new_specs, dict):
+            raise ValueError('new_specs должен быть словарём!')
         else:
             self._specs = new_specs.copy()
 
@@ -172,8 +163,7 @@ class Device(ABC):
         """
         Возвращает объект отзыва на устройство.
 
-        :return: объект Review или None
-        :rtype: Review | None
+        :return: Объект Review или None.
         """
         return self._review
 
@@ -182,10 +172,10 @@ class Device(ABC):
         """
             Принимает новое ревью модели и обрабатывает её.
             :param review: Новое значение ревью.
-            :return: None.
+            :raises NotReviewInClassReview: Если review не экземпляр класса Review.
         """
         if not isinstance(review, (Review, type(None))):
-           print(f'Ревью должно быть в классе Review или None!')
+           raise NotReviewInClassReview(review)
         else:
             self._review = review
 
@@ -196,21 +186,13 @@ class Device(ABC):
 
         Должен быть реализован в дочерних классах.
 
-        :return: тип устройства
-        :rtype: str
+        :return: Тип устройства.
         """
         pass
 
     @abstractmethod
     def get_short_description(self) -> str:
-        """
-        Абстрактный метод. Возвращает краткое описание устройства для превью на сайте.
-
-        Должен быть реализован в дочерних классах.
-
-        :return: краткое описание устройства
-        :rtype: str
-        """
+        """Абстрактный метод. Возвращает краткое описание устройства для превью на сайте."""
         pass
 
 
@@ -220,7 +202,6 @@ class Device(ABC):
             Если ключ уже существует, то значение перезаписывается
             :param key: Имя ключа.
             :param value: Значение ключа.
-            :return: None.
         """
         self.specs[key] = value
 
@@ -228,12 +209,12 @@ class Device(ABC):
         """
             Удаляет характеристику по ключу из spec
             :param key: Имя ключа.
-            :return: None.
+            :raises NotKeyInSpec: Если key это несуществующий ключ.
         """
         if key in self.specs:
             del self.specs[key]
         else:
-            print(f'Ключ {key} не найден!')
+            raise NotKeyInSpec(key, self.specs)
 
     @classmethod
     def from_dict(cls, data: dict) -> Device | None:
@@ -241,8 +222,7 @@ class Device(ABC):
         Метод обрабатывает словарь с характеристиками
         Если в словаре недопустимый ключ, то код выдаст ошибку
 
-        :param data: СЛОВАРЬ С ХАРАКТЕРИСТИКАМИ МОДЕЛИ
-        :return: 'Device'
+        :param data: СЛОВАРЬ С ХАРАКТЕРИСТИКАМИ МОДЕЛИ.
         """
         true_keys = ['brand', 'model', 'category']
         for key in true_keys:

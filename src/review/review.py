@@ -292,7 +292,13 @@ class Review:
 
     @staticmethod
     def _validate_text(text: str, field_name: str, max_length: int):
-        # TODO: РАСПИСАТЬ ДОКУМЕНТАЦИЮ!
+        """
+        Метод для обработкт ошибок в pros и cons.
+
+        :param text: Неверный текст плюса или минуса.
+        :param field_name: Имя пустой строки
+        :param max_length: Максимально допустимое значение.
+        """
         if not isinstance(text, str):
             raise ValueError(f'{field_name.capitalize()} должен быть str, получен '
                              f'{type(text).__name__}!')
