@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from src.review.status_review_enum import ReviewStatus
+from src.review.status_review import ReviewStatus
 from src.review.review_exception import *
 
 
