@@ -3,7 +3,7 @@ from datetime import datetime
 
 from src.review.review import Review
 from src.device.allowed_categories import AllowedCategories
-from src.device.device_expection import * # TODO: ИСПРАВИТЬ НА ПРЯМОЙ ИМПОРТ
+from src.device.device_expection import NotCategoryInList, InvalidYear, NotReviewInClassReview, NotKeyInSpec, InvalidKey
 
 class Device(ABC):
     """Класс для создания устройства"""
@@ -102,7 +102,7 @@ class Device(ABC):
             raise ValueError('year должен быть int(None)')
 
         if year < 1900 or year > datetime.now().year:
-            raise FalseYear(year, 1900, datetime.now().year)
+            raise InvalidYear(year, 1900, datetime.now().year)
         else:
             self._year = year
 
@@ -227,8 +227,8 @@ class Device(ABC):
         true_keys = ['brand', 'model', 'category']
         for key in true_keys:
             if key not in data:
-                print(f"неверный ключ '{key}'")
-                return None
+                raise InvalidKey(key, true_keys)
+
 
         if 'review' in data:
             review = Review.from_dict(data['review'])
