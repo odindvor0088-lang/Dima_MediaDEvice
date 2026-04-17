@@ -174,6 +174,7 @@ class Device(ABC):
             :param review: Новое значение ревью.
             :raises NotReviewInClassReview: Если review не экземпляр класса Review.
         """
+
         if not isinstance(review, (Review, type(None))):
            raise NotReviewInClassReview(review)
         else:
@@ -211,10 +212,11 @@ class Device(ABC):
             :param key: Имя ключа.
             :raises NotKeyInSpec: Если key это несуществующий ключ.
         """
-        if key in self.specs:
+        try:
             del self.specs[key]
-        else:
-            raise NotKeyInSpec(key, self.specs)
+        except NotKeyInSpec as ex:
+            raise NotKeyInSpec(key, self.specs) from ex
+
 
     @classmethod
     def from_dict(cls, data: dict) -> Device | None:
