@@ -1,20 +1,27 @@
 from datetime import datetime
 
 from src.review.status_review import ReviewStatus
-from src.review.review_exception import EmptyReviewFieldError, ReviewTextTooLongError, InvalidReviewStatusError,\
-    MissingRequiredFieldReviewError
+from src.review.review_exception import (
+    EmptyReviewFieldError,
+    ReviewTextTooLongError,
+    InvalidReviewStatusError,
+    MissingRequiredFieldReviewError,
+)
 
 
 class Review:
     """Класс для представления обзора"""
-    def __init__(self,
-                 title: str,
-                 content: str,
-                 author: str = "Эксперт",
-                 status: ReviewStatus = ReviewStatus.PUBLISHED,
-                 date: datetime = None,
-                 pros: list[str] = None,
-                 cons: list[str] = None) -> None:
+
+    def __init__(
+        self,
+        title: str,
+        content: str,
+        author: str = "Эксперт",
+        status: ReviewStatus = ReviewStatus.PUBLISHED,
+        date: datetime = None,
+        pros: list[str] = None,
+        cons: list[str] = None,
+    ) -> None:
         """
         Инициализация объекта Review.
 
@@ -36,24 +43,6 @@ class Review:
         self.pros = pros
         self.cons = cons
 
-    def __repr__(self) -> str:
-        """
-        Возвращает строковое представление объекта Review для отладки.
-
-        :return: Строковое представление экземпляра класса.
-        """
-        return (f"Review(title = {self.title!r}, content = {self.content!r}, author = {self.author!r},"
-                f" date = {self.date}, pros = {self.pros}, cons = {self.cons} )")
-
-    def __str__(self) -> str:
-        """
-        Возвращает пользовательское строковое представление объекта Review.
-
-        :return: Описание обзора для пользователя.
-        """
-        return (f"Создано ревью состоящее из: (title = {self.title}, content = {self.content}, author = {self.author},"
-                f" date = {self.date}, pros = {self.pros}, cons = {self.cons} )")
-
     @property
     def title(self) -> str:
         """
@@ -74,7 +63,9 @@ class Review:
         :return: None.
         """
         if not isinstance(value, str):
-            raise TypeError(f"Заголовок должен быть str, получен {type(value).__name__}")
+            raise TypeError(
+                f"Заголовок должен быть str, получен {type(value).__name__}"
+            )
 
         if value.strip():
             self.__title = value
@@ -98,10 +89,13 @@ class Review:
         :param value: Новый текст обзора.
         :raises ValueError: Если value не является строкой.
         """
-        if isinstance(value, str):
+        if not isinstance(value, str):
+            raise ValueError(f"value должен быть str!")
+
+        if value.strip():
             self.__content = value
         else:
-            raise ValueError(f'value должен быть str!')
+            raise EmptyReviewFieldError("content")
 
     @property
     def author(self) -> str:
@@ -120,10 +114,13 @@ class Review:
         :param value: Новое имя автора.
         :raises ValueError: Если value не является строкой.
         """
-        if isinstance(value, str):
-            self.__author = value
+        if not isinstance(value, str):
+            raise ValueError(f"value должен быть str!")
+
+        if value.strip():
+            self.__content = value
         else:
-            raise TypeError(f'value должен быть str!')
+            raise EmptyReviewFieldError("author")
 
     @property
     def date(self) -> datetime:
@@ -143,13 +140,13 @@ class Review:
         :param new_date: Новая дата создания обзора.
         :raises ValueError: Если new_date не является экземпляром datetime.
         """
+        if not isinstance(new_date, (datetime, type(None))):
+            raise ValueError("new_date должна быть экземпляром класса datetime!")
+
         if new_date is None:
             self.__date = datetime.now()
-        elif isinstance(new_date, datetime):
-            self.__date = new_date
         else:
-            raise ValueError('new_date должна быть экземпляром класса datetime!')
-
+            self.__date = new_date
 
     @property
     def pros(self) -> list[str]:
@@ -170,13 +167,13 @@ class Review:
         :param list_pros: новый список плюсов
         :raises ValueError: если list_pros не является списком
         """
+        if not isinstance(list_pros, (list, type(None))):
+            raise ValueError("list_pros не является списком!")
+
         if list_pros is None:
             self.__pros = []
-        elif isinstance(list_pros, list):
+        elif all(isinstance(i, str) for i in list_pros):
             self.__pros = list_pros.copy()
-        else:
-            raise ValueError('list_pros не является списком!')
-
 
     @property
     def cons(self) -> list:
@@ -188,7 +185,7 @@ class Review:
         return self.__cons.copy()
 
     @cons.setter
-    def cons(self, list_cons: list) -> None:
+    def cons(self, list_cons: list[str]) -> None:
         """
         Устанавливает новый список минусов обзора.
         Если передан None, инициализируется пустой список.
@@ -197,12 +194,13 @@ class Review:
         :param list_cons: Новый список минусов.
         :raises ValueError: Если list_cons не является списком.
         """
+        if not isinstance(list_cons, (list, type(None))):
+            raise ValueError("list_cons не является списком!")
+
         if list_cons is None:
             self.__cons = []
-        elif isinstance(list_cons, list):
+        elif all(isinstance(i, str) for i in list_cons):
             self.__cons = list_cons.copy()
-        else:
-            raise ValueError('list_cons не является списком!')
 
     @property
     def status(self) -> ReviewStatus:
@@ -236,7 +234,6 @@ class Review:
         self._validate_text(pro_text, "pro_text", max_length)
         self.__pros.append(pro_text)
 
-
     def add_con(self, con_text: str, max_length: int = 200) -> None:
         """
         Добавляет новый минус в список.
@@ -250,12 +247,14 @@ class Review:
         """
         Удаляет плюс по индексу.
         :param index: индекс плюса
-         """
+        """
         try:
             del self.pros[index]
         except IndexError as ex:
-            raise IndexError(f"Индекс {index} выходит за переделы списка. "
-                             f"Размер: {len(self.pros)}.") from ex
+            raise IndexError(
+                f"Индекс {index} выходит за переделы списка. "
+                f"Размер: {len(self.pros)}."
+            ) from ex
 
     def remove_con(self, index: int) -> None:
         """
@@ -265,8 +264,10 @@ class Review:
         try:
             del self.cons[index]
         except IndexError as ex:
-            raise IndexError(f"Индекс {index} выходит за переделы списка. "
-                             f"Размер: {len(self.cons)}.") from ex
+            raise IndexError(
+                f"Индекс {index} выходит за переделы списка. "
+                f"Размер: {len(self.cons)}."
+            ) from ex
 
     @classmethod
     def from_dict(cls, data: dict) -> Review | None:
@@ -277,18 +278,18 @@ class Review:
         :param data: СЛОВАРЬ С ХАРАКТЕРИСТИКАМИ МОДЕЛИ
         :return: 'Device'
         """
-        true_keys = ['title', 'content']
+        true_keys = ["title", "content"]
         for key in true_keys:
             if key not in data:
                 raise MissingRequiredFieldReviewError(key)
 
         return cls(
-            title=data['title'],
-            content=data['content'],
-            author=data.get('author', 'Эксперт'),
-            date=data.get('date'),
-            pros=data.get('pros'),
-            cons=data.get('cons')
+            title=data["title"],
+            content=data["content"],
+            author=data.get("author", "Эксперт"),
+            date=data.get("date"),
+            pros=data.get("pros"),
+            cons=data.get("cons"),
         )
 
     @staticmethod
@@ -301,11 +302,36 @@ class Review:
         :param max_length: Максимально допустимое значение.
         """
         if not isinstance(text, str):
-            raise ValueError(f'{field_name.capitalize()} должен быть str, получен '
-                             f'{type(text).__name__}!')
+            raise ValueError(
+                f"{field_name.capitalize()} должен быть str, получен "
+                f"{type(text).__name__}!"
+            )
 
         if not text.strip():
             raise EmptyReviewFieldError(field_name)
 
         if len(text) > max_length:
             raise ReviewTextTooLongError(field_name, len(text), max_length)
+
+    def __repr__(self) -> str:
+        """
+        Возвращает строковое представление объекта Review для отладки.
+
+        :return: Строковое представление экземпляра класса.
+        """
+        return (
+            f"Review(title = {self.title!r}, content = {self.content!r}, author = {self.author!r},"
+            f" date = {self.date}, pros = {self.pros}, cons = {self.cons} )"
+        )
+
+    def __str__(self) -> str:
+        """
+        Возвращает пользовательское строковое представление объекта Review.
+
+        :return: Описание обзора для пользователя.
+        """
+        return (
+            f"Создано ревью состоящее из: (title = {self.title},"
+            f" content = {self.content}, author = {self.author},"
+            f" date = {self.date}, pros = {self.pros}, cons = {self.cons} )"
+        )

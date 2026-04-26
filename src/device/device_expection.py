@@ -1,12 +1,14 @@
 class DeviceError(Exception):
     """Базовое исключение для всех ошибок связанных с классов Device."""
 
+
 class NotCategoryInList(DeviceError):
     """
     Возникает при попытке установить неверную категорию.
-    
+
     :param category: Неверное значение категории.
     """
+
     def __init__(self, category: str, allow_list: list[str]):
         """
         Инициализирует исключение с указанием неверной категории.
@@ -21,6 +23,7 @@ class NotCategoryInList(DeviceError):
             f"Допустимые статусы: {", ".join(self.allow_list)}."
         )
 
+
 class InvalidYear(Exception):
     """
     Возникает при попытке установить неверную категорию.
@@ -29,6 +32,7 @@ class InvalidYear(Exception):
     :param min_year: Минимальное значение года.
     :param year_now: Текущая дата.
     """
+
     def __init__(self, year: int, min_year: int, year_now: int):
         """
         Инициализирует исключение с указанием неверной даты.
@@ -46,12 +50,14 @@ class InvalidYear(Exception):
             f"Год должен быть в диапазоне между {self.min_year} и {self.year_now}"
         )
 
+
 class NotReviewInClassReview(Exception):
     """
     Возникает при попытке установить новое ревью которого нет в кдассе Review.
 
     :param review: Неверное ревью.
     """
+
     def __int__(self, review):
         """
         Инициализирует исключение с указанием неверного ревью.
@@ -64,13 +70,14 @@ class NotReviewInClassReview(Exception):
             f"Недопустимое ревью(должен быть экземпляром класса Review): {self.review}."
         )
 
+
 class NotKeyInSpec(Exception):
     """
-       Возникает при попытке удалить характеристику по неверному ключу.
+    Возникает при попытке удалить характеристику по неверному ключу.
 
-       :param key: Неверный ключ.
-       :param spec: Словарь характеристик.
-       """
+    :param key: Неверный ключ.
+    :param spec: Словарь характеристик.
+    """
 
     def __int__(self, key: str, spec: dict):
         """
@@ -84,9 +91,9 @@ class NotKeyInSpec(Exception):
         self.spec = spec
 
         super().__init__(
-            f"Недопустимый ключ: {self.key}."
-            f"Допустимые ключи: {self.spec}"
+            f"Недопустимый ключ: {self.key}." f"Допустимые ключи: {self.spec}"
         )
+
 
 class InvalidKey(Exception):
     """
@@ -108,6 +115,5 @@ class InvalidKey(Exception):
         self.list = list
 
         super().__init__(
-            f"Недопустимый ключ: {self.key}."
-            f"Допустимые ключи: {self.list}"
+            f"Недопустимый ключ: {self.key}." f"Допустимые ключи: {self.list}"
         )
