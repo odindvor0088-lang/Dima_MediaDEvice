@@ -1,7 +1,8 @@
 from datetime import datetime
 
 from src.review.status_review import ReviewStatus
-from src.review.review_exception import * # TODO: ИСПРАВИТЬ НА ПРЯМОЙ ИМПОРТ
+from src.review.review_exception import EmptyReviewFieldError, ReviewTextTooLongError, InvalidReviewStatusError,\
+    MissingRequiredFieldReviewError
 
 
 class Review:

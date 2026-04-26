@@ -3,7 +3,7 @@ from datetime import datetime
 
 from src.review.review import Review
 from src.device.allowed_categories import AllowedCategories
-from src.device.device_expection import * # TODO: ИСПРАВИТЬ НА ПРЯМОЙ ИМПОРТ
+from src.device.device_expection import NotCategoryInList, InvalidYear, NotReviewInClassReview, NotKeyInSpec, InvalidKey
 
 class Device(ABC):
     """Класс для создания устройства"""
@@ -102,7 +102,7 @@ class Device(ABC):
             raise ValueError('year должен быть int(None)')
 
         if year < 1900 or year > datetime.now().year:
-            raise FalseYear(year, 1900, datetime.now().year)
+            raise InvalidYear(year, 1900, datetime.now().year)
         else:
             self._year = year
 
@@ -174,6 +174,7 @@ class Device(ABC):
             :param review: Новое значение ревью.
             :raises NotReviewInClassReview: Если review не экземпляр класса Review.
         """
+
         if not isinstance(review, (Review, type(None))):
            raise NotReviewInClassReview(review)
         else:
@@ -211,10 +212,11 @@ class Device(ABC):
             :param key: Имя ключа.
             :raises NotKeyInSpec: Если key это несуществующий ключ.
         """
-        if key in self.specs:
+        try:
             del self.specs[key]
-        else:
-            raise NotKeyInSpec(key, self.specs)
+        except NotKeyInSpec as ex:
+            raise NotKeyInSpec(key, self.specs) from ex
+
 
     @classmethod
     def from_dict(cls, data: dict) -> Device | None:
@@ -227,8 +229,8 @@ class Device(ABC):
         true_keys = ['brand', 'model', 'category']
         for key in true_keys:
             if key not in data:
-                print(f"неверный ключ '{key}'")
-                return None
+                raise InvalidKey(key, true_keys)
+
 
         if 'review' in data:
             review = Review.from_dict(data['review'])
