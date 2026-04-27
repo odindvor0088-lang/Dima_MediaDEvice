@@ -44,28 +44,6 @@ class Device(ABC):
         self.specs = specs  # присваиваем через свойство
         self.review = review  # присваиваем через свойство
 
-    def __repr__(self) -> str:
-        """
-        Возвращает строковое представление объекта Device для отладки.
-
-        :return: Строковое представление экземпляра класса.
-        """
-        return (
-            f"Device(brand = {self.brand!r}, model = {self.model!r}, category = {self.category!r},"
-            f" year = {self.year}, image = {self.image}, specs = {self.specs}, review = {self.review} )"
-        )
-
-    def __str__(self) -> str:
-        """
-        Возвращает пользовательское строковое представление объекта Device.
-
-        :return: Описание устройства для пользователя.
-        """
-        return (
-            f"Создано устройство: (brand = {self.brand!r}, model = {self.model!r}, category = {self.category!r},"
-            f" year = {self.year}, image = {self.image}, specs = {self.specs}, review = {self.review} )"
-        )
-
     @property
     def category(self) -> AllowedCategories:
         """
@@ -134,11 +112,11 @@ class Device(ABC):
         :param new_image: Новое значение изображения.
         :raises ValueError: Если new_image не str.
         """
-        if new_image is None:
-            self._image = "/"
-
         if not isinstance(new_image, (str, type(None))):
             raise ValueError("new_image должен быть str")
+
+        if new_image is None:
+            self._image = "/"
         else:
             self._image = new_image
 
@@ -158,11 +136,11 @@ class Device(ABC):
         :param new_specs: Новое значение словаря.
         :raises ValueError: Если new_specs не словарь.
         """
-        if new_specs is None:
-            self._specs = {}
-
         if not isinstance(new_specs, dict):
             raise ValueError("new_specs должен быть словарём!")
+
+        if new_specs is None:
+            self._specs = {}
         else:
             self._specs = new_specs.copy()
 
@@ -250,4 +228,26 @@ class Device(ABC):
             image=data.get("image"),
             specs=data.get("specs"),
             review=review,
+        )
+
+    def __repr__(self) -> str:
+        """
+        Возвращает строковое представление объекта Device для отладки.
+
+        :return: Строковое представление экземпляра класса.
+        """
+        return (
+            f"Device(brand = {self.brand!r}, model = {self.model!r}, category = {self.category!r},"
+            f" year = {self.year}, image = {self.image}, specs = {self.specs}, review = {self.review} )"
+        )
+
+    def __str__(self) -> str:
+        """
+        Возвращает пользовательское строковое представление объекта Device.
+
+        :return: Описание устройства для пользователя.
+        """
+        return (
+            f"Создано устройство: (brand = {self.brand!r}, model = {self.model!r}, category = {self.category!r},"
+            f" year = {self.year}, image = {self.image}, specs = {self.specs}, review = {self.review} )"
         )

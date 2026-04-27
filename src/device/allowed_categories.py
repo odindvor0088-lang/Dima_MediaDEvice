@@ -17,5 +17,9 @@ class AllowedCategories(StrEnum):
 
     @classmethod
     def to_list(cls) -> list[str]:
-        """ """
+        """
+        Возвращает атрибуты класса.
+
+        :return: Атрибут класса
+        """
         return [str(i) for i in cls]
