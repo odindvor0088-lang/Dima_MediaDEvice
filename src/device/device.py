@@ -205,7 +205,7 @@ class Device(ABC):
             raise NotKeyInSpec(key, self.specs) from ex
 
     @classmethod
-    def from_dict(cls, data: dict) -> Self | None:
+    def from_dict(cls, data: dict) -> Self | None: # TODO НЕПОНЯТНЫЙ DICT
         """
         Метод обрабатывает словарь с характеристиками
         Если в словаре недопустимый ключ, то код выдаст ошибку
