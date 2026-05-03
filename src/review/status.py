@@ -16,9 +16,5 @@ class ReviewStatus(StrEnum):
 
     @classmethod
     def to_list(cls) -> list[str]:
-        """
-        Возвращает атрибуты класса.
-
-        :return: Атрибут класса
-        """
+        """Возвращает список атрибутов класса."""
         return [str(i) for i in cls]

@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
+from copy import deepcopy
+from typing import Self
 
 from src.review.review import Review
-from src.device.allowed_categories import AllowedCategories
-from src.device.device_expection import (
+from src.device.categories import CategoriesDevice
+from src.device.exceptions import (
     NotCategoryInList,
     InvalidYear,
-    NotReviewInClassReview,
     NotKeyInSpec,
     InvalidKey,
 )
@@ -19,11 +20,11 @@ class Device(ABC):
         self,
         brand: str,
         model: str,
-        category: AllowedCategories,
+        category: CategoriesDevice,
         year: int = None,
         image: str = None,
         specs: dict = None,
-        review: Review = None,
+        review: Review | None = None,
     ) -> None:
         """
         Инициализирует объект Device.
@@ -45,7 +46,7 @@ class Device(ABC):
         self.review = review  # присваиваем через свойство
 
     @property
-    def category(self) -> AllowedCategories:
+    def category(self) -> CategoriesDevice:
         """
         Возвращает текущую категорию устройства.
 
@@ -54,7 +55,7 @@ class Device(ABC):
         return self._category
 
     @category.setter
-    def category(self, category: AllowedCategories | str) -> None:
+    def category(self, category: CategoriesDevice | str) -> None:
         """
         Устанавливает новую категорию устройства.
 
@@ -85,15 +86,14 @@ class Device(ABC):
         :raises FalseYear: Возникает если введена некорректная дата.
         """
         if not isinstance(year, (int, type(None))):
-            raise ValueError("year должен быть int(None)")
+            raise ValueError("year должен быть int или None")
 
         if year is None:
             self._year = datetime.now().year
-
-        if year < 1900 or year > datetime.now().year:
+        elif year < 1900 or year > datetime.now().year:
             raise InvalidYear(year, 1900, datetime.now().year)
-        else:
-            self._year = year
+
+        self._year = year
 
     @property
     def image(self) -> str | None:
@@ -105,7 +105,7 @@ class Device(ABC):
         return self._image
 
     @image.setter
-    def image(self, new_image: str) -> str | None:
+    def image(self, new_image: str | None) -> None:
         """
         Принимает новый экран модели и обрабатывает её.
         Если передано None, то будет установлена картинка по умолчанию.
@@ -113,7 +113,7 @@ class Device(ABC):
         :raises ValueError: Если new_image не str.
         """
         if not isinstance(new_image, (str, type(None))):
-            raise ValueError("new_image должен быть str")
+            raise ValueError("new_image должен быть str или None")
 
         if new_image is None:
             self._image = "/"
@@ -127,7 +127,7 @@ class Device(ABC):
 
         :return: Копия словаря specs.
         """
-        return self._specs.copy()
+        return deepcopy(self._specs)
 
     @specs.setter
     def specs(self, new_specs: dict) -> None:
@@ -142,7 +142,7 @@ class Device(ABC):
         if new_specs is None:
             self._specs = {}
         else:
-            self._specs = new_specs.copy()
+            self._specs = deepcopy(new_specs)
 
     @property
     def review(self) -> Review | None:
@@ -162,7 +162,7 @@ class Device(ABC):
         """
 
         if not isinstance(review, (Review, type(None))):
-            raise NotReviewInClassReview(review)
+            raise ValueError("review must be Review or None")
         else:
             self._review = review
 
@@ -199,11 +199,11 @@ class Device(ABC):
         """
         try:
             del self.specs[key]
-        except NotKeyInSpec as ex:
+        except KeyError as ex:
             raise NotKeyInSpec(key, self.specs) from ex
 
     @classmethod
-    def from_dict(cls, data: dict) -> Device | None:
+    def from_dict(cls, data: dict) -> Self | None:
         """
         Метод обрабатывает словарь с характеристиками
         Если в словаре недопустимый ключ, то код выдаст ошибку

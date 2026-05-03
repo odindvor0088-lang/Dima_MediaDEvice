@@ -51,26 +51,6 @@ class InvalidYear(Exception):
         )
 
 
-class NotReviewInClassReview(Exception):
-    """
-    Возникает при попытке установить новое ревью которого нет в кдассе Review.
-
-    :param review: Неверное ревью.
-    """
-
-    def __int__(self, review):
-        """
-        Инициализирует исключение с указанием неверного ревью.
-
-        :param review: Неверное ревью.
-        """
-        self.review = review
-
-        super().__init__(
-            f"Недопустимое ревью(должен быть экземпляром класса Review): {self.review}."
-        )
-
-
 class NotKeyInSpec(Exception):
     """
     Возникает при попытке удалить характеристику по неверному ключу.

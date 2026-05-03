@@ -1,7 +1,8 @@
 from datetime import datetime
+from typing import Self
 
-from src.review.status_review import ReviewStatus
-from src.review.review_exception import (
+from src.review.status import ReviewStatus
+from src.review.exceptions import (
     EmptyReviewFieldError,
     ReviewTextTooLongError,
     InvalidReviewStatusError,
@@ -18,9 +19,9 @@ class Review:
         content: str,
         author: str = "Эксперт",
         status: ReviewStatus = ReviewStatus.PUBLISHED,
-        date: datetime = None,
-        pros: list[str] = None,
-        cons: list[str] = None,
+        date: datetime | None = None,
+        pros: list[str] | None = None,
+        cons: list[str] | None = None,
     ) -> None:
         """
         Инициализация объекта Review.
@@ -90,7 +91,7 @@ class Review:
         :raises ValueError: Если value не является строкой.
         """
         if not isinstance(value, str):
-            raise ValueError(f"value должен быть str!")
+            raise ValueError("value должен быть str!")
 
         if value.strip():
             self.__content = value
@@ -115,7 +116,7 @@ class Review:
         :raises ValueError: Если value не является строкой.
         """
         if not isinstance(value, str):
-            raise ValueError(f"value должен быть str!")
+            raise ValueError("value должен быть str!")
 
         if value.strip():
             self.__content = value
@@ -270,7 +271,7 @@ class Review:
             ) from ex
 
     @classmethod
-    def from_dict(cls, data: dict) -> Review | None:
+    def from_dict(cls, data: dict) -> Self | None:
         """
         Метод обрабатывает словарь с характеристиками
         Если в словаре недопустимый ключ, то код выдаст ошибку

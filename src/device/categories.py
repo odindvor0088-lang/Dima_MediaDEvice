@@ -1,7 +1,7 @@
 from enum import StrEnum
 
 
-class AllowedCategories(StrEnum):
+class CategoriesDevice(StrEnum):
     """
     Перечисление разрешённых категорий устройств.
 
