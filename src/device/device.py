@@ -65,8 +65,10 @@ class Device(ABC):
         :param category: Новая категория устройства.
         :raises NotCategoryInList: Возникает если категория не разрешена.
         """
-        # TODO: нужна реализация
-        pass
+        try:
+            self._category = CategoriesDevice(category)
+        except ValueError as ex:
+            raise NotCategoryInList(category, CategoriesDevice.to_list()) from ex
 
     @property
     def year(self) -> int:
