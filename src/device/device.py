@@ -21,9 +21,9 @@ class Device(ABC):
         brand: str,
         model: str,
         category: CategoriesDevice,
-        year: int = None,
-        image: str = None,
-        specs: dict = None,
+        year: int | None = None,
+        image: str | None = None,
+        specs: dict | None = None,
         review: Review | None = None,
     ) -> None:
         """
