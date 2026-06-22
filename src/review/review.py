@@ -119,7 +119,7 @@ class Review:
             raise ValueError("value должен быть str!")
 
         if value.strip():
-            self.__content = value
+            self.__author = value
         else:
             raise EmptyReviewFieldError("author")
 
