@@ -250,7 +250,7 @@ class Review:
         :param index: индекс плюса
         """
         try:
-            del self.pros[index]
+            del self.__pros[index]
         except IndexError as ex:
             raise IndexError(
                 f"Индекс {index} выходит за переделы списка. "
@@ -263,7 +263,7 @@ class Review:
         :param index: индекс минуса
         """
         try:
-            del self.cons[index]
+            del self.__cons[index]
         except IndexError as ex:
             raise IndexError(
                 f"Индекс {index} выходит за переделы списка. "
