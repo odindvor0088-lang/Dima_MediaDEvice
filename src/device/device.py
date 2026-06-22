@@ -192,7 +192,7 @@ class Device(ABC):
         :param key: Имя ключа.
         :param value: Значение ключа.
         """
-        self.specs[key] = value
+        self._specs[key] = value
 
     def remove_spec(self, key: str) -> None:
         """
