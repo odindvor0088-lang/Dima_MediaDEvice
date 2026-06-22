@@ -138,13 +138,14 @@ class Device(ABC):
         :param new_specs: Новое значение словаря.
         :raises ValueError: Если new_specs не словарь.
         """
-        if not isinstance(new_specs, dict):
-            raise ValueError("new_specs должен быть словарём!")
-
         if new_specs is None:
             self._specs = {}
+
+        if not isinstance(new_specs, dict):
+            raise ValueError("new_specs должен быть словарём!")
         else:
             self._specs = deepcopy(new_specs)
+
 
     @property
     def review(self) -> Review | None:
