@@ -138,13 +138,14 @@ class Device(ABC):
         :param new_specs: Новое значение словаря.
         :raises ValueError: Если new_specs не словарь.
         """
-        if not isinstance(new_specs, dict):
-            raise ValueError("new_specs должен быть словарём!")
-
         if new_specs is None:
             self._specs = {}
+
+        if not isinstance(new_specs, dict):
+            raise ValueError("new_specs должен быть словарём!")
         else:
             self._specs = deepcopy(new_specs)
+
 
     @property
     def review(self) -> Review | None:
@@ -191,7 +192,7 @@ class Device(ABC):
         :param key: Имя ключа.
         :param value: Значение ключа.
         """
-        self.specs[key] = value
+        self._specs[key] = value
 
     def remove_spec(self, key: str) -> None:
         """
@@ -200,7 +201,7 @@ class Device(ABC):
         :raises NotKeyInSpec: Если key это несуществующий ключ.
         """
         try:
-            del self.specs[key]
+            del self._specs[key]
         except KeyError as ex:
             raise NotKeyInSpec(key, self.specs) from ex
 
