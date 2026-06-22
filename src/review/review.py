@@ -119,7 +119,7 @@ class Review:
             raise ValueError("value должен быть str!")
 
         if value.strip():
-            self.__content = value
+            self.__author = value
         else:
             raise EmptyReviewFieldError("author")
 
@@ -242,7 +242,7 @@ class Review:
         :param max_length: Максимальная длина поля.
         """
         self._validate_text(con_text, "con_text", max_length)
-        self.__pros.append(con_text)
+        self.__cons.append(con_text)
 
     def remove_pro(self, index: int) -> None:
         """
@@ -250,7 +250,7 @@ class Review:
         :param index: индекс плюса
         """
         try:
-            del self.pros[index]
+            del self.__pros[index]
         except IndexError as ex:
             raise IndexError(
                 f"Индекс {index} выходит за переделы списка. "
@@ -263,7 +263,7 @@ class Review:
         :param index: индекс минуса
         """
         try:
-            del self.cons[index]
+            del self.__cons[index]
         except IndexError as ex:
             raise IndexError(
                 f"Индекс {index} выходит за переделы списка. "
