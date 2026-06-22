@@ -242,7 +242,7 @@ class Review:
         :param max_length: Максимальная длина поля.
         """
         self._validate_text(con_text, "con_text", max_length)
-        self.__pros.append(con_text)
+        self.__cons.append(con_text)
 
     def remove_pro(self, index: int) -> None:
         """
