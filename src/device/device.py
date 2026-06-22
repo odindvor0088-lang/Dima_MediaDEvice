@@ -201,7 +201,7 @@ class Device(ABC):
         :raises NotKeyInSpec: Если key это несуществующий ключ.
         """
         try:
-            del self.specs[key]
+            del self._specs[key]
         except KeyError as ex:
             raise NotKeyInSpec(key, self.specs) from ex
 
