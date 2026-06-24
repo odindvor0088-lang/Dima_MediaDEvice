@@ -45,9 +45,16 @@ def validate_string_length(
 
     :return: Исходная строка.
 
+    :raises TypeError: Если value не является строкой.
     :raises TextTooLongError: Если текстовое поле превышает допустимую длину.
     """
-    if len(value) > max_length:
+    if not isinstance(value, str):
+        raise TypeError(
+            f"Поле '{field_name}.{entity}' должно быть str, получен {type(value).__name__}"
+        )
+
+    normalized = validate_non_empty_string(value, field_name, entity)
+    if len(normalized) > max_length:
         raise TextTooLongError(
             f"Поле '{field_name}.{entity}' не должно превышать {max_length} символов, "
             f"сейчас в вашем поле {len(value)} символов"
@@ -76,6 +83,9 @@ def validate_year_range(
 
     raises YearOutOfRangeError: Год выходит за допустимый диапазон..
     """
+    if not isinstance(year, int):
+        raise TypeError(f"Поле '{field_name}.{entity}' должно быть str, получен {type(year).__name__}")
+
     if year < min_year or year > max_year:
         raise YearOutOfRangeError(
             f"Поле '{field_name}.{entity}' не должно превышать {max_year} и быть меньше {min_year}, "
@@ -99,6 +109,11 @@ def validate_required_fields(
 
     :return: Исходный словарь.
     """
+    if not isinstance(data, dict):
+        raise TypeError(
+            f"Параметр 'data' должен быть dict, получен {type(data).__name__}"
+        )
+
     for field in required_fields:
         if field not in data:
             raise InvalidKey(
