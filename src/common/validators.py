@@ -48,11 +48,6 @@ def validate_string_length(
     :raises TypeError: Если value не является строкой.
     :raises TextTooLongError: Если текстовое поле превышает допустимую длину.
     """
-    if not isinstance(value, str):
-        raise TypeError(
-            f"Поле '{field_name}.{entity}' должно быть str, получен {type(value).__name__}"
-        )
-
     normalized = validate_non_empty_string(value, field_name, entity)
     if len(normalized) > max_length:
         raise TextTooLongError(
