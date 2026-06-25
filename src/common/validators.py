@@ -1,4 +1,5 @@
 from src.common.exceptions import *
+from typing import TypeVar
 from enum import Enum
 
 
@@ -117,35 +118,40 @@ def validate_required_fields(
             )
 
 
+E = TypeVar("E", bound=Enum)
+
 def validate_choice(
-    value,
-    enum_class,
+    value: object,
+    enum_class: type[E],
     field_name: str,
     entity: str,
-):
+) -> E:
     """
-    Проверка значения по Enum / StrEnum
+        Проверка значения по Enum / StrEnum
 
-    :param value: Проверяемое значение.
-    :param enum_class: Класс Enum для проверки.
-    :param field_name: Имя поля.
-    :param entity: Имя сущности (класса), к которому относится поле.
+        :param value: Проверяемое значение.
+        :param enum_class: Класс Enum для проверки.
+        :param field_name: Имя поля.
+        :param entity: Имя сущности (класса), к которому относится поле.
 
-    :return: Элемент Enum.
+        :return: Элемент Enum.
 
-    :raises TypeError: Если enum_class не является Enum
-    :raises ValueError: Если значение недопустимо для Enum
-    """
+        :raises TypeError: Если enum_class не является Enum
+        :raises ValueError: Если значение недопустимо для Enum
+        """
     if not isinstance(enum_class, type) or not issubclass(enum_class, Enum):
         raise TypeError(
             f"Параметр 'enum_class' должен быть классом Enum, "
-            f"получен {type(enum_class).__name__}"
+            f"получен {type(enum_class).name}"
         )
 
-    if value is None:
+    try:
+        value = enum_class(value)
+    except ValueError as e:
+        allowed = ", ".join(m.value for m in enum_class)
         raise ValueError(
-            f"Поле '{field_name}' в сущности '{entity}' не может быть None"
-        )
-
-    if isinstance(value, enum_class):
+            f"Недопустимое значение для поля '{field_name}.{entity}'. "
+            f"Допустимы: {allowed}"
+        ) from e
+    else:
         return value
