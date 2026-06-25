@@ -1,5 +1,5 @@
 from src.common.exceptions import *
-from src.device.exceptions import *
+from enum import Enum
 
 
 
@@ -111,7 +111,7 @@ def validate_required_fields(
 
     for field in required_fields:
         if field not in data:
-            raise InvalidKey(
+            raise KeyError(
                 f"Отсутствует обязательное поле '{field}'. "
                 f"Обязательные поля: {required_fields}"
             )
@@ -127,8 +127,25 @@ def validate_choice(
     Проверка значения по Enum / StrEnum
 
     :param value: Проверяемое значение.
-    :param enum_class:
-    :param field_name:
-    :param entity:
-    :return:
+    :param enum_class: Класс Enum для проверки.
+    :param field_name: Имя поля.
+    :param entity: Имя сущности (класса), к которому относится поле.
+
+    :return: Элемент Enum.
+
+    :raises TypeError: Если enum_class не является Enum
+    :raises ValueError: Если значение недопустимо для Enum
     """
+    if not isinstance(enum_class, type) or not issubclass(enum_class, Enum):
+        raise TypeError(
+            f"Параметр 'enum_class' должен быть классом Enum, "
+            f"получен {type(enum_class).__name__}"
+        )
+
+    if value is None:
+        raise ValueError(
+            f"Поле '{field_name}' в сущности '{entity}' не может быть None"
+        )
+
+    if isinstance(value, enum_class):
+        return value
