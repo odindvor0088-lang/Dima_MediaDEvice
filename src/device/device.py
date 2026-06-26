@@ -5,12 +5,7 @@ from typing import Self
 
 from src.review.review import Review
 from src.device.categories import CategoriesDevice
-from src.device.exceptions import (
-    NotCategoryInList,
-    InvalidYear,
-    NotKeyInSpec,
-    InvalidKey,
-)
+from src.common.validators import *
 
 
 class Device(ABC):
@@ -46,6 +41,40 @@ class Device(ABC):
         self.review = review  # присваиваем через свойство
 
     @property
+    def brand(self) -> str:
+        """
+        Возвращает текущий бренд устройства
+
+        :return: Брэнд устройства
+        """
+        return self._brand
+
+    @brand.setter
+    def brand(self, value: str) -> None:
+        self._brand = validate_non_empty_string(
+            value=value,
+            field_name="brand",
+            entity="Device",
+        )
+
+    @property
+    def model(self) -> str:
+        """
+        Возвращает текущую модель устройства.
+
+        :return: Модель устройства
+        """
+        return self.model
+
+    @model.setter
+    def model(self, value: str) -> None:
+        self._model = validate_non_empty_string(
+            value=value,
+            field_name="model",
+            entity="Device",
+        )
+
+    @property
     def category(self) -> CategoriesDevice:
         """
         Возвращает текущую категорию устройства.
@@ -55,20 +84,13 @@ class Device(ABC):
         return self._category
 
     @category.setter
-    def category(self, category: CategoriesDevice | str) -> None:
-        """
-        Устанавливает новую категорию устройства.
-
-        Проверяет, что категория есть в списке разрешённых (ALLOWED_CATEGORIES).
-        Если категория не найдена, выводится сообщение об ошибке.
-
-        :param category: Новая категория устройства.
-        :raises NotCategoryInList: Возникает если категория не разрешена.
-        """
-        try:
-            self._category = CategoriesDevice(category)
-        except ValueError as ex:
-            raise NotCategoryInList(category, CategoriesDevice.to_list()) from ex
+    def category(self, value: CategoriesDevice | str) -> None:
+        self._category = validate_choice(
+            value=value,
+            enum_class=CategoriesDevice,
+            field_name="category",
+            entity="Device",
+        )
 
     @property
     def year(self) -> int:
@@ -80,22 +102,18 @@ class Device(ABC):
         return self._year
 
     @year.setter
-    def year(self, year: int | None) -> None:
-        """
-        Принимает новый год модели и обрабатывает её.
-        Если передано None, устанавливается текущий год.
-        :param year: Новое значение годы.
-        :raises FalseYear: Возникает если введена некорректная дата.
-        """
-        if not isinstance(year, (int, type(None))):
-            raise ValueError("year должен быть int или None")
-
-        if year is None:
+    def year(self, value: int | None) -> None:
+        if value is None:
             self._year = datetime.now().year
-        elif year < 1900 or year > datetime.now().year:
-            raise InvalidYear(year, 1900, datetime.now().year)
+            return
 
-        self._year = year
+        self._year = validate_year_range(
+            year=value,
+            field_name="year",
+            entity="Device",
+            min_year=1900,
+            max_year=datetime.now().year,
+        )
 
     @property
     def image(self) -> str | None:
@@ -203,7 +221,7 @@ class Device(ABC):
         try:
             del self._specs[key]
         except KeyError as ex:
-            raise NotKeyInSpec(key, self.specs) from ex
+            raise KeyError(f"Ключ '{key}' не найден.")
 
     @classmethod
     def from_dict(cls, data: dict) -> Self | None: # TODO НЕПОНЯТНЫЙ DICT
@@ -213,24 +231,10 @@ class Device(ABC):
 
         :param data: СЛОВАРЬ С ХАРАКТЕРИСТИКАМИ МОДЕЛИ.
         """
-        true_keys = ["brand", "model", "category"]
-        for key in true_keys:
-            if key not in data:
-                raise InvalidKey(key, true_keys)
-
-        if "review" in data:
-            review = Review.from_dict(data["review"])
-        else:
-            review = None
-
-        return cls(
-            brand=data["brand"],
-            model=data["model"],
-            category=data["category"],
-            year=data.get("year"),
-            image=data.get("image"),
-            specs=data.get("specs"),
-            review=review,
+        validate_required_fields(
+            data=data,
+            required_fields=["brand", "model", "category"],
+            entity="Device",
         )
 
     def __repr__(self) -> str:
