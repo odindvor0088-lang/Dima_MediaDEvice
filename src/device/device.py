@@ -5,7 +5,7 @@ from typing import Self
 
 from src.review.review import Review
 from src.device.categories import CategoriesDevice
-from src.common.validators import *
+from src.common.validators import validate_non_empty_string, validate_choice, validate_year_range,  validate_required_fields
 
 
 class Device(ABC):
@@ -105,15 +105,15 @@ class Device(ABC):
     def year(self, value: int | None) -> None:
         if value is None:
             self._year = datetime.now().year
-            return
 
-        self._year = validate_year_range(
-            year=value,
-            field_name="year",
-            entity="Device",
-            min_year=1900,
-            max_year=datetime.now().year,
-        )
+        else:
+            self._year = validate_year_range(
+                year=value,
+                field_name="year",
+                entity="Device",
+                min_year=1900,
+                max_year=datetime.now().year,
+            )
 
     @property
     def image(self) -> str | None:
@@ -132,8 +132,11 @@ class Device(ABC):
         :param new_image: Новое значение изображения.
         :raises ValueError: Если new_image не str.
         """
-        if not isinstance(new_image, (str, type(None))):
-            raise ValueError("new_image должен быть str или None")
+        self._image = validate_non_empty_string(
+            value=new_image,
+            field_name="image",
+            entity="Device",
+        )
 
         if new_image is None:
             self._image = "/"
@@ -221,7 +224,7 @@ class Device(ABC):
         try:
             del self._specs[key]
         except KeyError as ex:
-            raise KeyError(f"Ключ '{key}' не найден.")
+            raise KeyError(f"Ключ '{key}' не найден.") from ex
 
     @classmethod
     def from_dict(cls, data: dict) -> Self | None: # TODO НЕПОНЯТНЫЙ DICT

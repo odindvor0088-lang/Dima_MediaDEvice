@@ -2,7 +2,8 @@ from datetime import datetime
 from typing import Self
 
 from src.review.status import ReviewStatus
-from src.common.validators import *
+from src.common.validators import (validate_non_empty_string, validate_string_length, validate_choice,
+                                   validate_required_fields)
 
 
 class Review:
@@ -67,14 +68,8 @@ class Review:
 
     @content.setter
     def content(self, value: str) -> None:
-        checked_content = validate_non_empty_string(
-            value=value,
-            field_name="content",
-            entity="Review",
-        )
-
         self.__content = validate_string_length(
-            value=checked_content,
+            value=value,
             field_name="content",
             entity="Review",
             max_length=500,
@@ -97,13 +92,11 @@ class Review:
         :param value: Новое имя автора.
         :raises ValueError: Если value не является строкой.
         """
-        if not isinstance(value, str):
-            raise ValueError("value должен быть str!")
-
-        if value.strip():
-            self.__author = value
-        else:
-            raise EmptyFieldError("author")
+        self.__author = validate_non_empty_string(
+            value=value,
+            field_name="author",
+            entity="Review",
+        )
 
     @property
     def date(self) -> datetime:
@@ -256,21 +249,6 @@ class Review:
         entity="Review",
         )
 
-    @staticmethod
-    def _validate_text(text: str, field_name: str, max_length: int):
-        """
-        Метод для обработкт ошибок в pros и cons.
-
-        :param text: Неверный текст плюса или минуса.
-        :param field_name: Имя пустой строки
-        :param max_length: Максимально допустимое значение.
-        """
-
-        normalized = validate_non_empty_string(value=text, field_name=field_name, entity=Review)
-
-        validate_string_length(value=normalized, field_name=field_name, entity=Review)
-
-        return normalized
 
     def __repr__(self) -> str:
         """
