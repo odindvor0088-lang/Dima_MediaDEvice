@@ -2,12 +2,8 @@ from datetime import datetime
 from typing import Self
 
 from src.review.status import ReviewStatus
-from src.review.exceptions import (
-    EmptyReviewFieldError,
-    ReviewTextTooLongError,
-    InvalidReviewStatusError,
-    MissingRequiredFieldReviewError,
-)
+from src.common.validators import (validate_non_empty_string, validate_string_length, validate_choice,
+                                   validate_required_fields)
 
 
 class Review:
@@ -55,23 +51,11 @@ class Review:
 
     @title.setter
     def title(self, value: str) -> None:
-        """
-        Устанавливает заголовок.
-
-        :param value: Новый текст заголовка.
-        :raises TypeError: Если value не является строкой.
-        :raises EmptyReviewFieldError: Если value пустая строка или состоит только из пробелов.
-        :return: None.
-        """
-        if not isinstance(value, str):
-            raise TypeError(
-                f"Заголовок должен быть str, получен {type(value).__name__}"
-            )
-
-        if value.strip():
-            self.__title = value
-        else:
-            raise EmptyReviewFieldError("title")
+        self.__title = validate_non_empty_string(
+            value=value,
+            field_name="title",
+            entity="Review",
+        )
 
     @property
     def content(self) -> str:
@@ -84,19 +68,12 @@ class Review:
 
     @content.setter
     def content(self, value: str) -> None:
-        """
-        Устанавливает новый текст обзора.
-
-        :param value: Новый текст обзора.
-        :raises ValueError: Если value не является строкой.
-        """
-        if not isinstance(value, str):
-            raise ValueError("value должен быть str!")
-
-        if value.strip():
-            self.__content = value
-        else:
-            raise EmptyReviewFieldError("content")
+        self.__content = validate_string_length(
+            value=value,
+            field_name="content",
+            entity="Review",
+            max_length=500,
+        )
 
     @property
     def author(self) -> str:
@@ -115,13 +92,11 @@ class Review:
         :param value: Новое имя автора.
         :raises ValueError: Если value не является строкой.
         """
-        if not isinstance(value, str):
-            raise ValueError("value должен быть str!")
-
-        if value.strip():
-            self.__author = value
-        else:
-            raise EmptyReviewFieldError("author")
+        self.__author = validate_non_empty_string(
+            value=value,
+            field_name="author",
+            entity="Review",
+        )
 
     @property
     def date(self) -> datetime:
@@ -214,35 +189,31 @@ class Review:
 
     @status.setter
     def status(self, new_status: ReviewStatus | str) -> None:
-        """
-        Устанавливает новый статус обзора.
+        self.__status = validate_choice(
+            value=new_status,
+            enum_class=ReviewStatus,
+            field_name="status",
+            entity="Review",
+        )
 
-        :param new_status: Новый статус обзора.
-        :raises InvalidReviewStatusError: Если new_status не является
-                допустимым статусом из ReviewStatus.
-        """
-        try:
-            self.__status = ReviewStatus(new_status)
-        except ValueError as ex:
-            raise InvalidReviewStatusError(ReviewStatus.to_list(), new_status) from ex
+    def add_pro(self, pro_text: str) -> None:
+        checked_text = validate_string_length(
+            value=pro_text,
+            field_name="pros",
+            entity="Review",
+            max_length=200,
+        )
 
-    def add_pro(self, pro_text: str, max_length: int = 200) -> None:
-        """
-        Добавляет новый плюс в список.
-        :param pro_text: Текст плюса.
-        :param max_length: Максимальная длина поля.
-        """
-        self._validate_text(pro_text, "pro_text", max_length)
-        self.__pros.append(pro_text)
+        self.__pros.append(checked_text)
 
     def add_con(self, con_text: str, max_length: int = 200) -> None:
-        """
-        Добавляет новый минус в список.
-        :param con_text: Текст минуса.
-        :param max_length: Максимальная длина поля.
-        """
-        self._validate_text(con_text, "con_text", max_length)
-        self.__cons.append(con_text)
+        checked_text = validate_string_length(
+            value=con_text,
+            field_name="cons",
+            entity="Review",
+            max_length=200,
+        )
+        self.__cons.append(checked_text)
 
     def remove_pro(self, index: int) -> None:
         """
@@ -272,47 +243,12 @@ class Review:
 
     @classmethod
     def from_dict(cls, data: dict) -> Self | None:
-        """
-        Метод обрабатывает словарь с характеристиками
-        Если в словаре недопустимый ключ, то код выдаст ошибку
-
-        :param data: СЛОВАРЬ С ХАРАКТЕРИСТИКАМИ МОДЕЛИ
-        :return: 'Device'
-        """
-        true_keys = ["title", "content"]
-        for key in true_keys:
-            if key not in data:
-                raise MissingRequiredFieldReviewError(key)
-
-        return cls(
-            title=data["title"],
-            content=data["content"],
-            author=data.get("author", "Эксперт"),
-            date=data.get("date"),
-            pros=data.get("pros"),
-            cons=data.get("cons"),
+        validate_required_fields(
+        data=data,
+        required_fields=["title", "content"],
+        entity="Review",
         )
 
-    @staticmethod
-    def _validate_text(text: str, field_name: str, max_length: int):
-        """
-        Метод для обработкт ошибок в pros и cons.
-
-        :param text: Неверный текст плюса или минуса.
-        :param field_name: Имя пустой строки
-        :param max_length: Максимально допустимое значение.
-        """
-        if not isinstance(text, str):
-            raise ValueError(
-                f"{field_name.capitalize()} должен быть str, получен "
-                f"{type(text).__name__}!"
-            )
-
-        if not text.strip():
-            raise EmptyReviewFieldError(field_name)
-
-        if len(text) > max_length:
-            raise ReviewTextTooLongError(field_name, len(text), max_length)
 
     def __repr__(self) -> str:
         """
