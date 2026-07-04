@@ -1,4 +1,10 @@
-from src.common.exceptions import *
+from src.common.exceptions import (
+    EmptyFieldError,
+    InvalidChoiceError,
+    MissingRequiredFieldError,
+    TextTooLongError,
+    YearOutOfRangeError,
+)
 from typing import TypeVar
 from enum import Enum
 
@@ -51,10 +57,7 @@ def validate_string_length(
     """
     normalized = validate_non_empty_string(value, field_name, entity)
     if len(normalized) > max_length:
-        raise TextTooLongError(
-            f"Поле '{field_name}.{entity}' не должно превышать {max_length} символов, "
-            f"сейчас в вашем поле {len(value)} символов"
-        )
+        raise TextTooLongError(field_name, len(normalized), max_length, entity)
 
     return value
 
@@ -83,15 +86,13 @@ def validate_year_range(
         raise TypeError(f"Поле '{field_name}.{entity}' должно быть str, получен {type(year).__name__}")
 
     if year < min_year or year > max_year:
-        raise YearOutOfRangeError(
-            f"Поле '{field_name}.{entity}' не должно превышать {max_year} и быть меньше {min_year}, "
-            f"вы ввели значение {year}"
-        )
+        raise YearOutOfRangeError(field_name, entity, year, min_year, max_year)
 
     return year
 
 
 def validate_required_fields(
+    field_name: str,
     data: dict,
     required_fields: list[str],
     entity: str,
@@ -99,6 +100,7 @@ def validate_required_fields(
     """
     Проверяет обязательные ключи в словаре.
 
+    :param field_name: Имя поля.
     :param data: Словарь с нужными нам ключами.
     :param required_fields: Обязательные поля.
     :param entity:  Имя сущности (класса), к которому относится поле.
@@ -112,10 +114,7 @@ def validate_required_fields(
 
     for field in required_fields:
         if field not in data:
-            raise KeyError(
-                f"Отсутствует обязательное поле '{field}'. "
-                f"Обязательные поля: {required_fields}"
-            )
+            raise MissingRequiredFieldError(field_name, entity)
 
 
 E = TypeVar("E", bound=Enum)
@@ -147,11 +146,8 @@ def validate_choice(
 
     try:
         value = enum_class(value)
-    except ValueError as e:
+    except InvalidChoiceError as e:
         allowed = ", ".join(m.value for m in enum_class)
-        raise ValueError(
-            f"Недопустимое значение для поля '{field_name}.{entity}'. "
-            f"Допустимы: {allowed}"
-        ) from e
+        raise InvalidChoiceError(field_name, entity, value) from e
     else:
         return value
